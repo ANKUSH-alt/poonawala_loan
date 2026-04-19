@@ -125,11 +125,12 @@
       const pass = document.getElementById('reg-password').value;
       const btn = document.getElementById('reg-btn');
 
+      const API = window.location.origin.includes('localhost') ? 'http://localhost:5001/api' : '/api';
       btn.disabled = true;
       btn.innerHTML = '<div class="spinner"></div> Creating Account...';
 
       try {
-        const resp = await fetch('http://localhost:5001/api/auth/register', {
+        const resp = await fetch(`${API}/auth/register`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: email, full_name: name, password: pass })

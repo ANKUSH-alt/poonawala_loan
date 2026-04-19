@@ -3,7 +3,7 @@
    Fetches personalized offers from backend API
    ========================================================== */
 
-const API = 'http://localhost:5001/api';
+const API = window.location.origin.includes('localhost') ? 'http://localhost:5001/api' : '/api';
 
 // ─── LOAD PROFILE DATA ───────────────────────────────────
 const sessionId = localStorage.getItem('pf_session') || 'DEMO123';

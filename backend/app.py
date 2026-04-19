@@ -406,7 +406,12 @@ def handle_policy():
     config = {p['key']: p['value'] for p in db.policy_config.find()}
     return jsonify({'success': True, 'config': config})
 
-if __name__ == '__main__':
+# Initialize DB once on import for Vercel
+try:
     init_db()
+except Exception as e:
+    print(f"Init DB error: {e}")
+
+if __name__ == '__main__':
     print('🚀 Poonawalla Fincorp Backend (Gemini AI) running at http://localhost:5001')
     app.run(host='0.0.0.0', port=5001, debug=True, use_reloader=False)

@@ -3,7 +3,7 @@
    Fetches all monitoring and application data from Flask API
    ========================================================== */
 
-const API = 'http://localhost:5001/api';
+const API = '/api';
 let loadedApps = [];
 
 // ─── CLOCK ────────────────────────────────────────────────

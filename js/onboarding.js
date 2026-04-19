@@ -3,7 +3,8 @@
    All state persisted to backend API (Flask + SQLite)
    ========================================================== */
 
-const API = 'http://localhost:5001/api';
+const API = window.location.origin.includes('localhost') ? 'http://localhost:5001/api' : '/api';
+let currentApplication = {};
 
 // ─── SESSION INIT ────────────────────────────────────────
 const SESSION_ID = Math.random().toString(36).substring(2, 10).toUpperCase();

@@ -139,6 +139,7 @@
   <script src="js/auth.js"></script>
   <script>
     async function handleLogin(e) {
+      const API = window.location.origin.includes('localhost') ? 'http://localhost:5001/api' : '/api';
       e.preventDefault();
       const user = document.getElementById('username').value;
       const pass = document.getElementById('password').value;
@@ -148,7 +149,7 @@
       btn.innerHTML = '<div class="spinner"></div> Logging in...';
 
       try {
-        const resp = await fetch('http://localhost:5001/api/auth/login', {
+        const resp = await fetch(`${API}/auth/login`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ username: user, password: pass })
