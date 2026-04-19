@@ -16,43 +16,30 @@ import google.generativeai as genai
 import json
 import random
 import string
-from datetime import datetime, timedelta
 import hashlib
 import uuid
+from datetime import datetime, timedelta
+from dotenv import load_dotenv
 
 # ─── CONFIG ──────────────────────────────────────────────────────────────────
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-FRONTEND_DIR = os.path.dirname(BASE_DIR)
+load_dotenv()
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
 
-# MongoDB Configuration
-MONGO_URI = os.environ.get('MONGO_URI', 'mongodb://localhost:27017/')
-DB_NAME = 'poonawalla'
-
-# Gemini AI Configuration
-GEMINI_API_KEY = "AIzaSyCIf7HBzrellRnHPm04hkEJcqW6cN2Yk3A"
+# Configure AI
 genai.configure(api_key=GEMINI_API_KEY)
-# Using Gemini 1.5 Flash for speed and structured output
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-app = Flask(__name__, static_folder=FRONTEND_DIR, static_url_path='')
-CORS(app, origins='*')
+app = Flask(__name__)
+CORS(app)
 
 # ─── DATABASE INIT ───────────────────────────────────────────────────────────
-class MongoJSONEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, ObjectId): return str(obj)
-        if isinstance(obj, datetime): return obj.isoformat()
-        return super().default(obj)
-
-app.json_encoder = MongoJSONEncoder
-
 try:
-    client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=2000)
-    client.server_info()
-    db = client[DB_NAME]
-    print(f"✅ Connected to MongoDB at {MONGO_URI}")
+    client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
+    db = client.get_database("poonawalla_loan_db")
+    print(f"✅ Securely connected to MongoDB")
 except Exception as e:
-    print(f"❌ Could not connect to MongoDB: {e}")
+    print(f"❌ Connection error: {e}")
     db = None
 
 def init_db():
