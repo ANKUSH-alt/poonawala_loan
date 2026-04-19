@@ -1,5 +1,7 @@
 # Poonawalla Fincorp – AI Loan Wizard 🏦🤖
 
+**Made by Ankush Gupta, AI Engineer**
+
 Experience the future of lending. This project is a production-grade, AI-powered Loan Origination System (LOS) designed for **Poonawalla Fincorp**. It leverages multi-modal AI to automate the entire loan journey—from campaign landing to instant sanction.
 
 ![Project Preview](https://img.shields.io/badge/AI-Gemini%201.5%20Flash-blueviolet)
