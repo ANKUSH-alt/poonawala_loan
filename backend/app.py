@@ -5,9 +5,6 @@ Flask + MongoDB + Google Gemini AI
 
 import sys
 import os
-# Ensure libraries path is included
-sys.path.insert(0, '/Users/ankushkumarguptapahleja/Library/Python/3.9/lib/python3.9/site-packages')
-
 from flask import Flask, request, jsonify, send_from_directory
 from flask_cors import CORS
 from pymongo import MongoClient, DESCENDING
