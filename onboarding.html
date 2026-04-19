@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Video Onboarding – Poonawalla Fincorp Loan Wizard</title>
+  <meta name="description" content="Complete your loan application via AI-guided video call. 3 minutes to your personalized loan offer." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/onboarding.css" />
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="bg-animated">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <div class="logo-icon">🏦</div>
+        <div class="logo-text">
+          <span class="logo-main">Poonawalla Fincorp</span>
+          <span class="logo-sub">Loan Wizard AI</span>
+        </div>
+      </a>
+      <div class="session-info">
+        <span class="session-badge">
+          <span class="live-dot"></span>
+          Session Active
+        </span>
+        <span class="session-id">ID: PF-<span id="session-id-display">...</span></span>
+      </div>
+      <div class="navbar-actions">
+        <div class="secure-badge">
+          <span>🔒</span>
+          <span>256-bit Encrypted</span>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <!-- STEP 1: Personal Details -->
+    <div class="onboarding-screen active" id="screen-1">
+      <div class="onboarding-layout">
+        <div class="onboarding-header">
+          <!-- Step Indicator -->
+          <div class="step-indicator" id="step-indicator">
+            <div class="step-wrapper">
+              <div class="step-item active" id="si-1">
+                <div class="step-circle">1</div>
+              </div>
+              <span class="step-label text-accent">Details</span>
+            </div>
+            <div class="step-line" id="sl-1"></div>
+            <div class="step-wrapper">
+              <div class="step-item" id="si-2">
+                <div class="step-circle">2</div>
+              </div>
+              <span class="step-label">Consent</span>
+            </div>
+            <div class="step-line" id="sl-2"></div>
+            <div class="step-wrapper">
+              <div class="step-item" id="si-3">
+                <div class="step-circle">3</div>
+              </div>
+              <span class="step-label">Video KYC</span>
+            </div>
+            <div class="step-line" id="sl-3"></div>
+            <div class="step-wrapper">
+              <div class="step-item" id="si-4">
+                <div class="step-circle">4</div>
+              </div>
+              <span class="step-label">Analysis</span>
+            </div>
+            <div class="step-line" id="sl-4"></div>
+            <div class="step-wrapper">
+              <div class="step-item" id="si-5">
+                <div class="step-circle">🎁</div>
+              </div>
+              <span class="step-label">Offers</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="onboarding-content">
+          <div class="screen-card">
+            <div class="section-eyebrow">Step 1 of 5</div>
+            <h1 style="font-size:1.75rem; font-weight:800; margin-bottom:0.5rem;">Personal Information</h1>
+            <p class="text-secondary mb-xl">Please provide your basic details. All information is secured with end-to-end encryption.</p>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label class="form-label">Full Name (as per PAN)</label>
+                <input type="text" class="form-input" id="full-name" placeholder="e.g., Rahul Kumar Sharma" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Mobile Number</label>
+                <div class="input-with-prefix">
+                  <span class="input-prefix">+91</span>
+                  <input type="tel" class="form-input" id="mobile" placeholder="9876543210" maxlength="10" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Date of Birth</label>
+                <input type="date" class="form-input" id="dob" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">PAN Number</label>
+                <input type="text" class="form-input" id="pan" placeholder="ABCDE1234F" maxlength="10" style="text-transform:uppercase" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Employment Type</label>
+                <select class="form-select" id="emp-type">
+                  <option value="">Select Type</option>
+                  <option value="salaried">Salaried</option>
+                  <option value="self-employed">Self Employed</option>
+                  <option value="business">Business Owner</option>
+                  <option value="professional">Professional (Doctor/CA/Lawyer)</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Monthly Income (₹)</label>
+                <input type="number" class="form-input" id="monthly-income" placeholder="e.g., 75000" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">Loan Purpose</label>
+                <select class="form-select" id="loan-purpose-detail">
+                  <option value="">Select Purpose</option>
+                  <option value="home">Home Purchase/Renovation</option>
+                  <option value="business">Business Expansion</option>
+                  <option value="education">Education</option>
+                  <option value="medical">Medical Emergency</option>
+                  <option value="vehicle">Vehicle Purchase</option>
+                  <option value="personal">Personal Needs</option>
+                  <option value="wedding">Wedding</option>
+                  <option value="travel">Travel</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Loan Amount Required (₹)</label>
+                <input type="number" class="form-input" id="loan-required" placeholder="e.g., 1500000" />
+              </div>
+              <div class="form-group" style="grid-column: 1/-1;">
+                <label class="form-label">Residential Address (City)</label>
+                <input type="text" class="form-input" id="city" placeholder="e.g., Mumbai, Maharashtra" />
+              </div>
+            </div>
+
+            <div class="geo-capture-section">
+              <div class="geo-info" id="geo-info">
+                <span class="geo-icon">📍</span>
+                <div>
+                  <strong>Location Access Required</strong>
+                  <p>We need your geo-location for compliance verification</p>
+                </div>
+                <button class="btn btn-ghost btn-sm" onclick="captureLocation()" id="geo-btn">Allow Location</button>
+              </div>
+              <div class="geo-success hidden" id="geo-success">
+                <span>✅</span>
+                <div>
+                  <strong>Location Captured</strong>
+                  <p id="geo-coords">Lat: –– | Long: ––</p>
+                </div>
+                <span class="badge badge-success">Verified</span>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg w-full mt-xl" onclick="proceedToConsent()">
+              Continue to Consent →
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 2: Consent -->
+    <div class="onboarding-screen" id="screen-2">
+      <div class="onboarding-layout">
+        <div class="onboarding-header"><!-- same step indicator via JS --></div>
+        <div class="onboarding-content">
+          <div class="screen-card consent-card">
+            <div class="section-eyebrow">Step 2 of 5</div>
+            <h1 style="font-size:1.75rem; font-weight:800; margin-bottom:0.5rem;">Consent & Authorization</h1>
+            <p class="text-secondary mb-xl">Please review and accept the following consents to proceed with your loan application.</p>
+
+            <div class="consent-list">
+              <div class="consent-item" id="c1">
+                <div class="consent-checkbox" onclick="toggleConsent('c1')">
+                  <div class="checkbox-inner"></div>
+                </div>
+                <div class="consent-text">
+                  <strong>Bureau Data Access</strong>
+                  <p>I consent to Poonawalla Fincorp accessing my credit bureau reports (CIBIL, Experian, Equifax) for credit assessment purposes.</p>
+                </div>
+              </div>
+
+              <div class="consent-item" id="c2">
+                <div class="consent-checkbox" onclick="toggleConsent('c2')">
+                  <div class="checkbox-inner"></div>
+                </div>
+                <div class="consent-text">
+                  <strong>Video Recording & Processing</strong>
+                  <p>I consent to video recording of the onboarding session. The recording will be used for KYC verification, age estimation, and audit purposes.</p>
+                </div>
+              </div>
+
+              <div class="consent-item" id="c3">
+                <div class="consent-checkbox" onclick="toggleConsent('c3')">
+                  <div class="checkbox-inner"></div>
+                </div>
+                <div class="consent-text">
+                  <strong>AI Processing of Biometric Data</strong>
+                  <p>I consent to AI/ML analysis of my facial features for identity verification and age estimation as per the DPDP Act 2023.</p>
+                </div>
+              </div>
+
+              <div class="consent-item" id="c4">
+                <div class="consent-checkbox" onclick="toggleConsent('c4')">
+                  <div class="checkbox-inner"></div>
+                </div>
+                <div class="consent-text">
+                  <strong>Speech-to-Text Processing</strong>
+                  <p>I consent to my verbal responses being transcribed and analyzed by AI systems for loan application purposes.</p>
+                </div>
+              </div>
+
+              <div class="consent-item" id="c5">
+                <div class="consent-checkbox" onclick="toggleConsent('c5')">
+                  <div class="checkbox-inner"></div>
+                </div>
+                <div class="consent-text">
+                  <strong>Location Data Usage</strong>
+                  <p>I consent to my geo-location being captured and stored for fraud prevention and regulatory compliance purposes.</p>
+                </div>
+              </div>
+
+              <div class="consent-item" id="c6">
+                <div class="consent-checkbox" onclick="toggleConsent('c6')">
+                  <div class="checkbox-inner"></div>
+                </div>
+                <div class="consent-text">
+                  <strong>Marketing Communication</strong>
+                  <p>I agree to receive loan offers, promotional updates, and service communications via SMS, email, and WhatsApp.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="consent-all">
+              <button class="btn btn-ghost btn-sm" onclick="acceptAllConsents()">✅ Accept All Consents</button>
+            </div>
+
+            <div class="verbal-consent-box">
+              <div class="vcb-icon">🎙️</div>
+              <div>
+                <strong>Verbal Consent Recording</strong>
+                <p>During the video call, you will be asked to verbally confirm: <em>"I, [Name], hereby give my consent for loan processing by Poonawalla Fincorp"</em></p>
+              </div>
+            </div>
+
+            <div class="consent-actions">
+              <button class="btn btn-ghost btn-lg" onclick="goToScreen(1)">← Back</button>
+              <button class="btn btn-primary btn-lg" onclick="proceedToVideoCall()" id="consent-next-btn" disabled>
+                Proceed to Video KYC →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 3: Video Call -->
+    <div class="onboarding-screen" id="screen-3">
+      <div class="onboarding-layout">
+        <div class="onboarding-content" style="max-width:100%;">
+          <div class="video-call-screen">
+            <div class="vc-left">
+              <div class="vc-main-video">
+                <div class="video-feed" id="video-feed">
+                  <video id="camera-feed" autoplay muted playsinline></video>
+                  <div class="video-overlay">
+                    <div class="vid-header">
+                      <div class="vid-badge">
+                        <span class="live-dot"></span>
+                        <span>LIVE</span>
+                      </div>
+                      <div class="vid-timer" id="vid-timer">00:00</div>
+                    </div>
+                    <div class="ai-scan-overlay" id="ai-overlay">
+                      <div class="ai-scan-box">
+                        <div class="scan-corner-anim tl"></div>
+                        <div class="scan-corner-anim tr"></div>
+                        <div class="scan-corner-anim bl"></div>
+                        <div class="scan-corner-anim br"></div>
+                        <div class="ai-scan-line"></div>
+                      </div>
+                      <span class="ai-scan-label">AI ANALYZING FACE</span>
+                    </div>
+                    <div class="vid-controls">
+                      <button class="vid-ctrl" id="toggle-mic" onclick="toggleMic()">🎙️</button>
+                      <button class="vid-ctrl vid-ctrl-end" onclick="endCall()">📵</button>
+                      <button class="vid-ctrl" onclick="toggleCamera()">📷</button>
+                    </div>
+                  </div>
+                  <div class="no-camera-placeholder" id="no-camera">
+                    <div>📷</div>
+                    <p>Camera Permission Required</p>
+                    <button class="btn btn-ghost btn-sm mt-md" onclick="startCamera()">Enable Camera</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- AI Agent Avatar -->
+              <div class="ai-agent-feed">
+                <div class="agent-avatar">
+                  <div class="agent-face">🤖</div>
+                  <div class="agent-speaking" id="agent-speaking">
+                    <span></span><span></span><span></span>
+                  </div>
+                </div>
+                <div class="agent-info">
+                  <strong>AI Loan Agent</strong>
+                  <span class="badge badge-accent" style="font-size:0.65rem;">Powered by Gemini</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="vc-right">
+              <div class="vc-panel">
+                <!-- STT Transcript -->
+                <div class="panel-section">
+                  <div class="panel-title">
+                    <span>🎙️ Live Transcript</span>
+                    <span class="badge badge-purple">AI STT</span>
+                  </div>
+                  <div class="transcript-box" id="transcript-box">
+                    <div class="transcript-msg agent">
+                      <span class="msg-role">AI Agent</span>
+                      <p>Welcome to Poonawalla Fincorp! I'm your AI Loan Advisor. Please ensure your face is clearly visible. Let's begin your verification.</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- AI Analysis Panel -->
+                <div class="panel-section">
+                  <div class="panel-title">
+                    <span>🧠 Real-time AI Analysis</span>
+                    <div class="spinner" style="width:14px;height:14px;"></div>
+                  </div>
+                  <div class="analysis-metrics">
+                    <div class="metric-row">
+                      <span>Face Detected</span>
+                      <span class="metric-status" id="m-face">Waiting...</span>
+                    </div>
+                    <div class="metric-row">
+                      <span>Liveness Check</span>
+                      <span class="metric-status" id="m-liveness">Waiting...</span>
+                    </div>
+                    <div class="metric-row">
+                      <span>Age Estimation</span>
+                      <span class="metric-status" id="m-age">Waiting...</span>
+                    </div>
+                    <div class="metric-row">
+                      <span>Identity Match</span>
+                      <span class="metric-status" id="m-identity">Waiting...</span>
+                    </div>
+                    <div class="metric-row">
+                      <span>Audio Quality</span>
+                      <span class="metric-status" id="m-audio">Analyzing...</span>
+                    </div>
+                    <div class="metric-row">
+                      <span>Verbal Consent</span>
+                      <span class="metric-status" id="m-consent">Pending...</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Questions to Answer -->
+                <div class="panel-section">
+                  <div class="panel-title">
+                    <span>📋 Current Question</span>
+                  </div>
+                  <div class="question-display" id="question-display">
+                    <div class="q-number">Q1 of 6</div>
+                    <p class="q-text" id="q-text">Initializing AI agent...</p>
+                    <div class="q-progress">
+                      <div class="progress-track">
+                        <div class="progress-fill" id="q-prog" style="width:0%"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="vc-actions">
+                  <button class="btn btn-ghost" onclick="goToScreen(2)">← Back</button>
+                  <button class="btn btn-success" onclick="completeVideoCall()" id="complete-call-btn" disabled>
+                    Complete & Analyze →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STEP 4: AI Analysis -->
+    <div class="onboarding-screen" id="screen-4">
+      <div class="onboarding-layout">
+        <div class="onboarding-content">
+          <div class="screen-card analysis-card">
+            <div class="analysis-header">
+              <div class="analysis-ai-icon">🧠</div>
+              <h1 style="font-size:1.75rem; font-weight:800;">AI Risk Assessment</h1>
+              <p class="text-secondary">Our multi-model AI system is analyzing your application...</p>
+            </div>
+
+            <div class="analysis-steps">
+              <div class="analysis-step" id="as-1">
+                <div class="as-icon">🎥</div>
+                <div class="as-content">
+                  <strong>Video Analysis</strong>
+                  <p>Processing facial biometrics and age estimation</p>
+                </div>
+                <div class="as-status" id="as-1-status">
+                  <div class="spinner"></div>
+                </div>
+              </div>
+
+              <div class="analysis-step" id="as-2">
+                <div class="as-icon">🗣️</div>
+                <div class="as-content">
+                  <strong>STT Processing</strong>
+                  <p>Extracting structured data from voice transcript</p>
+                </div>
+                <div class="as-status" id="as-2-status">
+                  <div class="spinner" style="opacity:0.3"></div>
+                </div>
+              </div>
+
+              <div class="analysis-step" id="as-3">
+                <div class="as-icon">📍</div>
+                <div class="as-content">
+                  <strong>Geo-Fraud Check</strong>
+                  <p>Verifying location against declared information</p>
+                </div>
+                <div class="as-status" id="as-3-status">
+                  <div class="spinner" style="opacity:0.3"></div>
+                </div>
+              </div>
+
+              <div class="analysis-step" id="as-4">
+                <div class="as-icon">📊</div>
+                <div class="as-content">
+                  <strong>Bureau Pull & Analysis</strong>
+                  <p>Fetching CIBIL score and credit history</p>
+                </div>
+                <div class="as-status" id="as-4-status">
+                  <div class="spinner" style="opacity:0.3"></div>
+                </div>
+              </div>
+
+              <div class="analysis-step" id="as-5">
+                <div class="as-icon">⚙️</div>
+                <div class="as-content">
+                  <strong>Policy Evaluation</strong>
+                  <p>Checking eligibility against lending policies</p>
+                </div>
+                <div class="as-status" id="as-5-status">
+                  <div class="spinner" style="opacity:0.3"></div>
+                </div>
+              </div>
+
+              <div class="analysis-step" id="as-6">
+                <div class="as-icon">🤖</div>
+                <div class="as-content">
+                  <strong>LLM Risk Classification</strong>
+                  <p>Gemini AI generating risk band and persona classification</p>
+                </div>
+                <div class="as-status" id="as-6-status">
+                  <div class="spinner" style="opacity:0.3"></div>
+                </div>
+              </div>
+
+              <div class="analysis-step" id="as-7">
+                <div class="as-icon">💰</div>
+                <div class="as-content">
+                  <strong>Offer Generation</strong>
+                  <p>Crafting personalized loan offers based on your profile</p>
+                </div>
+                <div class="as-status" id="as-7-status">
+                  <div class="spinner" style="opacity:0.3"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="overall-progress mt-xl">
+              <div class="flex justify-between mb-sm">
+                <span class="text-secondary" style="font-size:0.85rem;">Overall Progress</span>
+                <span style="font-size:0.85rem; font-weight:700;" id="prog-pct">0%</span>
+              </div>
+              <div class="progress-track" style="height:10px;">
+                <div class="progress-fill" id="main-progress" style="width:0%"></div>
+              </div>
+            </div>
+
+            <div class="analysis-footer hidden" id="analysis-done">
+              <div class="ai-summary">
+                <h3>✅ Analysis Complete</h3>
+                <div class="ai-summary-grid">
+                  <div class="ai-summary-item">
+                    <span class="label">Risk Band</span>
+                    <span class="value text-green" id="sum-risk">A+</span>
+                  </div>
+                  <div class="ai-summary-item">
+                    <span class="label">Credit Score</span>
+                    <span class="value text-accent" id="sum-cibil">782</span>
+                  </div>
+                  <div class="ai-summary-item">
+                    <span class="label">Age Verified</span>
+                    <span class="value" id="sum-age">32 yrs</span>
+                  </div>
+                  <div class="ai-summary-item">
+                    <span class="label">Income Verified</span>
+                    <span class="value text-green" id="sum-income">✓</span>
+                  </div>
+                </div>
+              </div>
+              <button class="btn btn-gold btn-xl w-full" onclick="goToOffers()">
+                🎁 View Your Loan Offers →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/onboarding.js"></script>
+</body>
+</html>

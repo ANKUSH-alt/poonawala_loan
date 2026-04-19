@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login – Poonawalla Fincorp Loan Wizard</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .auth-container {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      position: relative;
+      z-index: 10;
+    }
+    .auth-card {
+      width: 100%;
+      max-width: 420px;
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+    }
+    .auth-header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+    .auth-logo {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+    .auth-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .auth-sub {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    .form-label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.7);
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px;
+      padding: 0.85rem 1rem;
+      color: #fff;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+    }
+    .form-input:focus {
+      outline: none;
+      border-color: var(--brand-gold);
+      background: rgba(255,255,255,0.08);
+      box-shadow: 0 0 0 4px rgba(212, 175, 55, 0.1);
+    }
+    .auth-footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .auth-footer a {
+      color: var(--brand-gold);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .toggle-row {
+      display: flex;
+      background: rgba(255,255,255,0.05);
+      padding: 4px;
+      border-radius: 12px;
+      margin-bottom: 2rem;
+    }
+    .toggle-btn {
+      flex: 1;
+      padding: 0.6rem;
+      border-radius: 8px;
+      border: none;
+      background: transparent;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    .toggle-btn.active {
+      background: var(--brand-gold);
+      color: #1a0a00;
+    }
+  </style>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div id="toast-container"></div>
+
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo">🏦</div>
+        <h1 class="auth-title">System Login</h1>
+        <p class="auth-sub">Enter your credentials to access the Poonawalla Wizard</p>
+      </div>
+
+      <form id="login-form" onsubmit="handleLogin(event)">
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" class="form-input" id="username" placeholder="Enter your email" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" class="form-input" id="password" placeholder="••••••••" required />
+        </div>
+        <button type="submit" class="btn btn-primary btn-lg w-full" id="submit-btn" style="margin-top: 1rem;">
+          Login to System
+        </button>
+      </form>
+
+      <div class="auth-footer" style="text-align:center; margin-top:1.5rem; font-size:0.85rem; color:var(--text-muted);">
+        Don't have an account? <a href="signup.html" style="color:var(--brand-gold); text-decoration:none; font-weight:600;">Sign Up</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/auth.js"></script>
+  <script>
+    async function handleLogin(e) {
+      e.preventDefault();
+      const user = document.getElementById('username').value;
+      const pass = document.getElementById('password').value;
+      const btn = document.getElementById('submit-btn');
+      
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner"></div> Logging in...';
+
+      try {
+        const resp = await fetch('http://localhost:5001/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username: user, password: pass })
+        });
+        
+        const data = await resp.json();
+        if (data.success) {
+          localStorage.setItem('pf_auth', JSON.stringify(data.user));
+          showToast('Login successful! Redirecting...', 'success');
+          
+          setTimeout(() => {
+            if (data.user.role === 'admin') {
+              window.location.href = 'dashboard.html';
+            } else {
+              window.location.href = 'index.html';
+            }
+          }, 1500);
+        } else {
+          showToast(data.message || 'Login failed', 'error');
+          btn.disabled = false;
+          btn.textContent = 'Login to System';
+        }
+      } catch (err) {
+        showToast('Server connection failed', 'error');
+        btn.disabled = false;
+        btn.textContent = 'Login to System';
+      }
+    }
+
+    function showToast(msg, type = 'info') {
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+      const container = document.getElementById('toast-container');
+      if (!container) {
+        const div = document.createElement('div');
+        div.id = 'toast-container';
+        document.body.appendChild(div);
+      }
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${msg}</span>`;
+      document.getElementById('toast-container').appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+  </script>
+</body>
+</html>

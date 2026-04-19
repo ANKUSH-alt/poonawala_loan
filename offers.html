@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Loan Offers – Poonawalla Fincorp Loan Wizard</title>
+  <meta name="description" content="View your personalized loan offers from Poonawalla Fincorp. AI-curated offers based on your risk profile." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/offers.css" />
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div class="bg-animated">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+  </div>
+
+  <div id="toast-container"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="navbar-inner">
+      <a href="index.html" class="navbar-logo">
+        <div class="logo-icon">🏦</div>
+        <div class="logo-text">
+          <span class="logo-main">Poonawalla Fincorp</span>
+          <span class="logo-sub">Loan Wizard AI</span>
+        </div>
+      </a>
+      <div class="navbar-actions">
+        <a href="dashboard.html" class="btn btn-ghost btn-sm">Admin Dashboard</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="page-wrapper">
+    <div class="offers-page">
+      <!-- Celebration Header -->
+      <div class="offers-hero">
+        <div class="confetti-container" id="confetti"></div>
+        <div class="offers-hero-content">
+          <div class="celebration-badge">🎉 Congratulations!</div>
+          <h1>You're Pre-Approved!</h1>
+          <p>Based on your video KYC and AI risk assessment, we've curated <strong>3 personalized loan offers</strong> exclusively for you</p>
+
+          <div class="customer-profile-strip">
+            <div class="cp-item">
+              <span class="cp-label">Applicant</span>
+              <span class="cp-value" id="applicant-name">Rahul Kumar Sharma</span>
+            </div>
+            <div class="cp-divider"></div>
+            <div class="cp-item">
+              <span class="cp-label">Risk Band</span>
+              <span class="cp-value text-green" id="risk-band-display">A+</span>
+            </div>
+            <div class="cp-divider"></div>
+            <div class="cp-item">
+              <span class="cp-label">CIBIL Score</span>
+              <span class="cp-value text-accent" id="cibil-display">782</span>
+            </div>
+            <div class="cp-divider"></div>
+            <div class="cp-item">
+              <span class="cp-label">Session ID</span>
+              <span class="cp-value" id="session-display" style="font-family:monospace; font-size:0.85rem;">PF-XXXXXX</span>
+            </div>
+            <div class="cp-divider"></div>
+            <div class="cp-item">
+              <span class="cp-label">Valid Until</span>
+              <span class="cp-value text-gold" id="offer-expiry">—</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- AI Insight Banner -->
+      <div class="container">
+        <div class="ai-insight-banner">
+          <div class="ai-insight-icon">🤖</div>
+          <div class="ai-insight-content">
+            <strong>Gemini AI Assessment</strong>
+            <p id="ai-insight-text">
+              Based on your stable employment of 4+ years, consistent income of ₹85,000/month, high CIBIL score, and clean credit history,
+              you've been classified as a <strong style="color:var(--brand-green)">Premium Low-Risk borrower (Band A+)</strong>.
+              You qualify for our best-in-class interest rates and maximum loan tenure.
+            </p>
+          </div>
+          <div class="ai-confidence">
+            <span class="conf-label">AI Confidence</span>
+            <span class="conf-value">96.4%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Offers Grid -->
+      <div class="container">
+        <div class="offers-section-header">
+          <h2>Your Personalized Offers</h2>
+          <p class="text-secondary">AI-generated offers valid for 48 hours. Select the one that suits you best.</p>
+        </div>
+
+        <div class="offers-grid" id="offers-grid">
+          <!-- Offer cards injected by JS -->
+        </div>
+      </div>
+
+      <!-- EMI Calculator -->
+      <div class="container">
+        <div class="emi-calculator">
+          <div class="emi-calc-header">
+            <span>🧮</span>
+            <div>
+              <h3>EMI Calculator</h3>
+              <p class="text-secondary" style="font-size:0.85rem;">Calculate your monthly EMI based on custom inputs</p>
+            </div>
+          </div>
+
+          <div class="emi-inputs">
+            <div class="emi-input-group">
+              <label class="form-label">Loan Amount (₹)</label>
+              <input type="range" min="100000" max="5000000" step="50000" value="1500000" id="emi-amount" oninput="calcEMI()" />
+              <div class="emi-slider-labels">
+                <span>₹1L</span>
+                <span id="emi-amount-display" class="text-accent font-bold">₹15,00,000</span>
+                <span>₹50L</span>
+              </div>
+            </div>
+
+            <div class="emi-input-group">
+              <label class="form-label">Tenure (Months)</label>
+              <input type="range" min="12" max="84" step="6" value="36" id="emi-tenure" oninput="calcEMI()" />
+              <div class="emi-slider-labels">
+                <span>12m</span>
+                <span id="emi-tenure-display" class="text-accent font-bold">36 months</span>
+                <span>84m</span>
+              </div>
+            </div>
+
+            <div class="emi-input-group">
+              <label class="form-label">Interest Rate (% p.a.)</label>
+              <input type="range" min="8" max="24" step="0.5" value="11.5" id="emi-rate" oninput="calcEMI()" />
+              <div class="emi-slider-labels">
+                <span>8%</span>
+                <span id="emi-rate-display" class="text-accent font-bold">11.5%</span>
+                <span>24%</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="emi-result">
+            <div class="emi-result-main">
+              <span class="emi-label">Monthly EMI</span>
+              <span class="emi-value" id="emi-result">₹49,361</span>
+            </div>
+            <div class="emi-breakdown">
+              <div class="emi-break-item">
+                <span>Principal</span>
+                <span id="emi-principal">₹15,00,000</span>
+              </div>
+              <div class="emi-break-item">
+                <span>Total Interest</span>
+                <span id="emi-total-interest" class="text-gold">₹2,76,996</span>
+              </div>
+              <div class="emi-break-item">
+                <span>Total Payable</span>
+                <span id="emi-total-payable" class="text-accent">₹17,76,996</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Risk Profile Deep Dive -->
+      <div class="container">
+        <div class="risk-profile-section">
+          <div class="rps-header">
+            <h3>🔍 AI Risk Profile Analysis</h3>
+            <span class="badge badge-success">Detailed Assessment</span>
+          </div>
+
+          <div class="risk-factors-grid">
+            <div class="risk-factor">
+              <div class="rf-header">
+                <span class="rf-icon">💳</span>
+                <span class="rf-name">Credit History</span>
+                <span class="rf-score green">Excellent</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:88%; background: var(--grad-success)"></div>
+              </div>
+              <p class="rf-note">CIBIL 782 • No defaults • 6+ year credit history</p>
+            </div>
+
+            <div class="risk-factor">
+              <div class="rf-header">
+                <span class="rf-icon">💰</span>
+                <span class="rf-name">Income Stability</span>
+                <span class="rf-score green">Strong</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:82%; background: var(--grad-success)"></div>
+              </div>
+              <p class="rf-note">₹85,000/month • Salaried • 4 years tenure</p>
+            </div>
+
+            <div class="risk-factor">
+              <div class="rf-header">
+                <span class="rf-icon">📊</span>
+                <span class="rf-name">Debt-to-Income Ratio</span>
+                <span class="rf-score accent">Good</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:74%; background: var(--grad-primary)"></div>
+              </div>
+              <p class="rf-note">Existing EMI: ₹12,000 (14.1% of income) • Well within limits</p>
+            </div>
+
+            <div class="risk-factor">
+              <div class="rf-header">
+                <span class="rf-icon">🎥</span>
+                <span class="rf-name">Video KYC Score</span>
+                <span class="rf-score green">Verified</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:96%; background: var(--grad-success)"></div>
+              </div>
+              <p class="rf-note">Face verified • Age matched • Liveness confirmed</p>
+            </div>
+
+            <div class="risk-factor">
+              <div class="rf-header">
+                <span class="rf-icon">📍</span>
+                <span class="rf-name">Geo-Fraud Check</span>
+                <span class="rf-score green">Clean</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:100%; background: var(--grad-success)"></div>
+              </div>
+              <p class="rf-note">Location: Mumbai, MH • No fraud signals detected</p>
+            </div>
+
+            <div class="risk-factor">
+              <div class="rf-header">
+                <span class="rf-icon">🗣️</span>
+                <span class="rf-name">Verbal Consistency</span>
+                <span class="rf-score green">High</span>
+              </div>
+              <div class="progress-track">
+                <div class="progress-fill" style="width:91%; background: var(--grad-success)"></div>
+              </div>
+              <p class="rf-note">STT analysis: Statements consistent with declared data</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accept CTA -->
+      <div class="container">
+        <div class="accept-cta" id="accept-cta" style="display:none">
+          <div class="accept-cta-inner">
+            <div>
+              <h3>Ready to Proceed?</h3>
+              <p class="text-secondary">You selected: <strong id="selected-offer-display">—</strong></p>
+            </div>
+            <button class="btn btn-gold btn-xl" id="accept-btn" onclick="acceptOffer()">
+              ✅ Accept This Offer
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Accepted State -->
+      <div class="container hidden" id="accepted-section">
+        <div class="accepted-card">
+          <div class="accepted-icon">🎊</div>
+          <h2>Loan Application Submitted!</h2>
+          <p class="text-secondary">Your application is being processed. You'll receive a call within 2 business hours.</p>
+
+          <div class="accepted-details">
+            <div class="ad-item">
+              <span>Application Number</span>
+              <strong id="app-number" class="text-accent">—</strong>
+            </div>
+            <div class="ad-item">
+              <span>Loan Amount</span>
+              <strong id="accepted-amount" class="text-gold">—</strong>
+            </div>
+            <div class="ad-item">
+              <span>Interest Rate</span>
+              <strong id="accepted-rate" class="text-green">—</strong>
+            </div>
+            <div class="ad-item">
+              <span>Monthly EMI</span>
+              <strong id="accepted-emi" class="text-accent">—</strong>
+            </div>
+          </div>
+
+          <div class="accepted-actions">
+            <a href="dashboard.html" class="btn btn-ghost btn-lg">View Audit Logs</a>
+            <a href="index.html" class="btn btn-primary btn-lg">Back to Home</a>
+          </div>
+
+          <div class="audit-trail-box">
+            <div class="atb-header">📋 Audit Trail (Regulatory Compliance)</div>
+            <div class="atb-items" id="audit-items">
+              <!-- Injected by JS -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/offers.js"></script>
+</body>
+</html>

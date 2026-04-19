@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Poonawalla Fincorp – AI Loan Wizard | Instant Digital Loans</title>
+  <meta name="description" content="Get instant personal loans with AI-powered video onboarding. No paperwork, no branch visits. Complete your loan journey in minutes with Poonawalla Fincorp Loan Wizard." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/landing.css" />
+</head>
+<body>
+  <!-- Background -->
+  <div class="grid-bg"></div>
+  <div class="bg-animated">
+    <div class="bg-orb bg-orb-1"></div>
+    <div class="bg-orb bg-orb-2"></div>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toast-container"></div>
+
+  <!-- Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="navbar-inner">
+      <div class="navbar-logo">
+        <div class="logo-icon">🏦</div>
+        <div class="logo-text">
+          <span class="logo-main">Poonawalla Fincorp</span>
+          <span class="logo-sub">Loan Wizard AI</span>
+        </div>
+      </div>
+      <ul class="navbar-nav">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how-it-works">How It Works</a></li>
+        <li><a href="#eligibility">Eligibility</a></li>
+      </ul>
+      <div class="navbar-actions">
+        <a href="login.html" class="btn btn-ghost btn-sm">Login</a>
+        <a href="onboarding.html" class="btn btn-gold btn-sm">Apply Now →</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container">
+      <div class="hero-content">
+        <div class="hero-badge">
+          <span class="live-dot"></span>
+          <span>AI-Powered Video Onboarding</span>
+          <span class="badge badge-accent">LIVE</span>
+        </div>
+
+        <h1 class="hero-title">
+          Get Your Dream Loan in<br/>
+          <span class="text-gradient-gold">Minutes, Not Days</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Experience India's most advanced AI-powered loan origination system.
+          Complete your entire loan journey via a 3-minute video call — no paperwork, no branch visits.
+        </p>
+
+        <div class="hero-cta">
+          <a href="onboarding.html" class="btn btn-gold btn-xl" id="start-journey-btn">
+            🎥 Start Video Onboarding
+          </a>
+          <a href="#how-it-works" class="btn btn-ghost btn-lg">
+            See How It Works
+          </a>
+        </div>
+
+        <div class="hero-stats">
+          <div class="stat-item">
+            <span class="stat-value">₹50L+</span>
+            <span class="stat-label">Max Loan Amount</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">3 Min</span>
+            <span class="stat-label">Video Onboarding</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">10.5%</span>
+            <span class="stat-label">Starting Rate p.a.</span>
+          </div>
+          <div class="stat-divider"></div>
+          <div class="stat-item">
+            <span class="stat-value">99.2%</span>
+            <span class="stat-label">AI Accuracy</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="phone-mockup">
+          <div class="phone-frame">
+            <div class="phone-screen">
+              <div class="video-call-ui">
+                <div class="vc-header">
+                  <span class="live-dot"></span>
+                  <span class="vc-live-text">LIVE • AI ANALYZING</span>
+                </div>
+                <div class="vc-face-area">
+                  <div class="face-scan">
+                    <div class="scan-line"></div>
+                    <div class="face-icon">👤</div>
+                    <div class="scan-corners">
+                      <span class="corner tl"></span>
+                      <span class="corner tr"></span>
+                      <span class="corner bl"></span>
+                      <span class="corner br"></span>
+                    </div>
+                  </div>
+                </div>
+                <div class="vc-metrics">
+                  <div class="metric">
+                    <span class="metric-label">Age Est.</span>
+                    <span class="metric-value accent">32 yrs</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-label">Risk Score</span>
+                    <span class="metric-value green">A+</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-label">Confidence</span>
+                    <span class="metric-value">94%</span>
+                  </div>
+                </div>
+                <div class="vc-stt">
+                  <div class="stt-wave">
+                    <span></span><span></span><span></span><span></span><span></span>
+                  </div>
+                  <p class="stt-text">"I work as a Software Engineer..."</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-glow"></div>
+        </div>
+
+        <!-- Floating AI Cards -->
+        <div class="float-card float-card-1">
+          <span>🤖</span>
+          <div>
+            <p class="float-card-title">AI Risk Analysis</p>
+            <p class="float-card-sub">Processing bureau data...</p>
+          </div>
+          <div class="spinner"></div>
+        </div>
+
+        <div class="float-card float-card-2">
+          <span>✅</span>
+          <div>
+            <p class="float-card-title">KYC Verified</p>
+            <p class="float-card-sub">Identity Confirmed</p>
+          </div>
+          <span class="badge badge-success">Done</span>
+        </div>
+
+        <div class="float-card float-card-3">
+          <span>💰</span>
+          <div>
+            <p class="float-card-title">Pre-approved!</p>
+            <p class="float-card-sub">₹15,00,000 @ 11.5%</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Banner -->
+  <section class="trust-banner">
+    <div class="container">
+      <div class="trust-inner">
+        <div class="trust-item">
+          <span class="trust-icon">🛡️</span>
+          <span>RBI Regulated</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">🔒</span>
+          <span>256-bit SSL Encrypted</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">📋</span>
+          <span>DPDP Compliant</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">⚡</span>
+          <span>Instant Decisioning</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">🎯</span>
+          <span>Zero Paperwork</span>
+        </div>
+        <div class="trust-item">
+          <span class="trust-icon">🏆</span>
+          <span>NBFC of the Year 2024</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Features Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-eyebrow text-center" style="justify-content:center;">AI Intelligence Layer</div>
+      <h2 class="features-title text-center">Powered by Cutting-Edge AI</h2>
+      <p class="features-subtitle text-center">Our multi-modal AI system processes video, audio, and financial data simultaneously to deliver instant, accurate decisions</p>
+
+      <div class="features-grid">
+
+        <div class="feature-card feature-card--accent">
+          <div class="feature-icon">🎥</div>
+          <h3>Video Call Onboarding</h3>
+          <p>Live video session captures all KYC signals in real-time. No physical documents needed.</p>
+          <div class="feature-pills">
+            <span class="pill">WebRTC</span>
+            <span class="pill">HD Streaming</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🗣️</div>
+          <h3>Speech-to-Text AI</h3>
+          <p>Advanced STT converts verbal responses into structured data — employment, income, loan purpose.</p>
+          <div class="feature-pills">
+            <span class="pill">Real-time</span>
+            <span class="pill">Multi-language</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">👁️</div>
+          <h3>Computer Vision Age Estimation</h3>
+          <p>Facial analysis estimates customer age from live video with 96%+ accuracy for policy compliance.</p>
+          <div class="feature-pills">
+            <span class="pill">CNN Model</span>
+            <span class="pill">Anti-spoof</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">🧠</div>
+          <h3>LLM Intelligence</h3>
+          <p>GPT-4 class model interprets conversational context and performs customer risk classification.</p>
+          <div class="feature-pills">
+            <span class="pill">Gemini Pro</span>
+            <span class="pill">Structured Output</span>
+          </div>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">📍</div>
+          <h3>Geo-Location Verification</h3>
+          <p>Real-time geo-verification ensures compliance and detects location-based fraud signals.</p>
+          <div class="feature-pills">
+            <span class="pill">Fraud Detection</span>
+            <span class="pill">Compliance</span>
+          </div>
+        </div>
+
+        <div class="feature-card feature-card--gold">
+          <div class="feature-icon">💎</div>
+          <h3>Personalized Loan Offers</h3>
+          <p>AI generates tailored loan amount, tenure, interest rate & EMI in milliseconds post-assessment.</p>
+          <div class="feature-pills">
+            <span class="pill">Instant</span>
+            <span class="pill">Personalised</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- How It Works -->
+  <section class="how-it-works" id="how-it-works">
+    <div class="container">
+      <div class="section-eyebrow" style="justify-content:center; display:flex;">End-to-End Journey</div>
+      <h2 class="text-center" style="font-size:2rem; font-weight:800; margin-bottom:0.5rem;">How It Works</h2>
+      <p class="text-center text-secondary mb-xl">From campaign link to sanctioned loan — all in under 5 minutes</p>
+
+      <div class="journey-flow">
+        <div class="journey-step" data-step="1">
+          <div class="journey-step-icon">📱</div>
+          <div class="journey-step-num">01</div>
+          <h3>Receive Campaign Link</h3>
+          <p>Get a personalized secure link via SMS, WhatsApp, or email from an approved campaign</p>
+        </div>
+        <div class="journey-arrow">→</div>
+
+        <div class="journey-step" data-step="2">
+          <div class="journey-step-icon">🎥</div>
+          <div class="journey-step-num">02</div>
+          <h3>Video Onboarding</h3>
+          <p>Join a 3-minute AI-guided video call. Answer simple questions verbally while the AI captures signals</p>
+        </div>
+        <div class="journey-arrow">→</div>
+
+        <div class="journey-step" data-step="3">
+          <div class="journey-step-icon">🤖</div>
+          <div class="journey-step-num">03</div>
+          <h3>AI Risk Assessment</h3>
+          <p>LLM + bureau data + computer vision analyze your profile and calculate your risk score instantly</p>
+        </div>
+        <div class="journey-arrow">→</div>
+
+        <div class="journey-step" data-step="4">
+          <div class="journey-step-icon">💰</div>
+          <div class="journey-step-num">04</div>
+          <h3>Instant Loan Offer</h3>
+          <p>Receive personalized loan offers with amount, rate, tenure, and EMI details in real-time</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Eligibility Section -->
+  <section class="eligibility" id="eligibility">
+    <div class="container">
+      <div class="eligibility-inner">
+        <div class="eligibility-content">
+          <div class="section-eyebrow">Quick Check</div>
+          <h2>Check Your Eligibility</h2>
+          <p class="text-secondary">Answer a few quick questions before starting your video session</p>
+
+          <div class="eligibility-form" id="eligibility-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Monthly Income</label>
+                <select class="form-select" id="income-range">
+                  <option value="">Select Range</option>
+                  <option value="25000-50000">₹25,000 – ₹50,000</option>
+                  <option value="50000-100000">₹50,000 – ₹1,00,000</option>
+                  <option value="100000-300000">₹1,00,000 – ₹3,00,000</option>
+                  <option value="300000+">Above ₹3,00,000</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Employment Type</label>
+                <select class="form-select" id="employment-type">
+                  <option value="">Select Type</option>
+                  <option value="salaried">Salaried</option>
+                  <option value="self-employed">Self Employed</option>
+                  <option value="business">Business Owner</option>
+                  <option value="professional">Professional</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Loan Purpose</label>
+                <select class="form-select" id="loan-purpose">
+                  <option value="">Select Purpose</option>
+                  <option value="home">Home Purchase/Renovation</option>
+                  <option value="business">Business Expansion</option>
+                  <option value="education">Education</option>
+                  <option value="medical">Medical Emergency</option>
+                  <option value="vehicle">Vehicle Purchase</option>
+                  <option value="personal">Personal Needs</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Loan Amount Required</label>
+                <select class="form-select" id="loan-amount">
+                  <option value="">Select Amount</option>
+                  <option value="1-5">₹1L – ₹5L</option>
+                  <option value="5-15">₹5L – ₹15L</option>
+                  <option value="15-30">₹15L – ₹30L</option>
+                  <option value="30-50">₹30L – ₹50L</option>
+                </select>
+              </div>
+            </div>
+
+            <button class="btn btn-primary btn-lg w-full" id="check-eligibility-btn" onclick="checkEligibility()">
+              Check Eligibility & Proceed
+            </button>
+          </div>
+
+          <div class="eligibility-result hidden" id="eligibility-result">
+            <div class="elig-success">
+              <div class="elig-icon">🎉</div>
+              <h3>You're Pre-Eligible!</h3>
+              <p>Based on your inputs, you qualify for a loan. Start your video session to get your personalized offer.</p>
+              <a href="onboarding.html" class="btn btn-gold btn-lg w-full mt-md">Start Video Onboarding →</a>
+            </div>
+          </div>
+        </div>
+
+        <div class="eligibility-info">
+          <h3>Eligibility Criteria</h3>
+          <div class="criteria-list">
+            <div class="criteria-item">
+              <span class="criteria-icon">✅</span>
+              <div>
+                <strong>Age:</strong> 21 – 65 years
+              </div>
+            </div>
+            <div class="criteria-item">
+              <span class="criteria-icon">✅</span>
+              <div>
+                <strong>Min Income:</strong> ₹25,000/month
+              </div>
+            </div>
+            <div class="criteria-item">
+              <span class="criteria-icon">✅</span>
+              <div>
+                <strong>Employment:</strong> Salaried / Self-Employed
+              </div>
+            </div>
+            <div class="criteria-item">
+              <span class="criteria-icon">✅</span>
+              <div>
+                <strong>Credit Score:</strong> 650+ (CIBIL)
+              </div>
+            </div>
+            <div class="criteria-item">
+              <span class="criteria-icon">✅</span>
+              <div>
+                <strong>Residency:</strong> Indian Citizen / NRI
+              </div>
+            </div>
+            <div class="criteria-item">
+              <span class="criteria-icon">✅</span>
+              <div>
+                <strong>Documents:</strong> PAN + Aadhaar (Digital)
+              </div>
+            </div>
+          </div>
+
+          <div class="loan-products mt-xl">
+            <h4 class="mb-md">Loan Products</h4>
+            <div class="product-card">
+              <span>💼</span>
+              <div>
+                <strong>Personal Loan</strong>
+                <p>Up to ₹30L | 10.5% p.a.</p>
+              </div>
+            </div>
+            <div class="product-card">
+              <span>🏠</span>
+              <div>
+                <strong>Home Loan</strong>
+                <p>Up to ₹5Cr | 8.75% p.a.</p>
+              </div>
+            </div>
+            <div class="product-card">
+              <span>🚗</span>
+              <div>
+                <strong>Vehicle Loan</strong>
+                <p>Up to ₹50L | 9.5% p.a.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section -->
+  <section class="cta-section">
+    <div class="container">
+      <div class="cta-inner">
+        <div class="cta-badge">Limited Time Offer</div>
+        <h2>Zero Processing Fee This Month! 🎁</h2>
+        <p>Start your video onboarding now and get your personalized loan offer in under 5 minutes</p>
+        <a href="onboarding.html" class="btn btn-gold btn-xl" id="cta-apply-btn">
+          🎥 Begin Video KYC Now
+        </a>
+        <p class="cta-note">No credit score impact • Fully digital • RBI compliant</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <div class="navbar-logo">
+            <div class="logo-icon">🏦</div>
+            <div class="logo-text">
+              <span class="logo-main">Poonawalla Fincorp</span>
+              <span class="logo-sub">Loan Wizard AI</span>
+            </div>
+          </div>
+          <p class="text-muted mt-md" style="font-size:0.85rem; line-height:1.7;">
+            India's first fully AI-powered video loan origination platform. RBI registered NBFC with 15 million happy customers.
+          </p>
+        </div>
+        <div class="footer-links">
+          <h5>Products</h5>
+          <ul>
+            <li><a href="#">Personal Loans</a></li>
+            <li><a href="#">Home Loans</a></li>
+            <li><a href="#">Vehicle Loans</a></li>
+            <li><a href="#">Business Loans</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Company</h5>
+          <ul>
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Press Room</a></li>
+            <li><a href="#">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h5>Legal</h5>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+            <li><a href="#">Fair Practice Code</a></li>
+            <li><a href="#">Grievance Redressal</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="text-muted" style="font-size:0.8rem;">© 2025 Poonawalla Fincorp Limited. CIN: L65910MH2005PLC268935 | NBFC Registration: N-13.01773</p>
+        <p class="text-muted" style="font-size:0.78rem; margin-top:0.5rem;">*Loan disbursement subject to final credit assessment and policy approval. Interest rates are indicative and may vary.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Eligibility check
+    function checkEligibility() {
+      const income = document.getElementById('income-range').value;
+      const employment = document.getElementById('employment-type').value;
+      const purpose = document.getElementById('loan-purpose').value;
+      const amount = document.getElementById('loan-amount').value;
+
+      if (!income || !employment || !purpose || !amount) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+
+      const btn = document.getElementById('check-eligibility-btn');
+      btn.innerHTML = '<div class="spinner"></div> Checking Eligibility...';
+      btn.disabled = true;
+
+      // Store pre-filled data
+      localStorage.setItem('pf_income', income);
+      localStorage.setItem('pf_employment', employment);
+      localStorage.setItem('pf_purpose', purpose);
+      localStorage.setItem('pf_amount', amount);
+
+      setTimeout(() => {
+        document.getElementById('eligibility-form').classList.add('hidden');
+        document.getElementById('eligibility-result').classList.remove('hidden');
+        showToast('You are pre-eligible! Proceed to video onboarding.', 'success');
+      }, 2000);
+    }
+
+    function showToast(msg, type = 'info') {
+      const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+      const toast = document.createElement('div');
+      toast.className = `toast ${type}`;
+      toast.innerHTML = `<span class="toast-icon">${icons[type]}</span><span class="toast-msg">${msg}</span>`;
+      document.getElementById('toast-container').appendChild(toast);
+      setTimeout(() => toast.remove(), 4000);
+    }
+
+    // Navbar scroll effect
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('navbar');
+      nav.style.background = window.scrollY > 50
+        ? 'rgba(2, 11, 46, 0.95)'
+        : 'rgba(2, 11, 46, 0.8)';
+    });
+
+    // Animate stats counter
+    function animateCounters() {
+      document.querySelectorAll('.stat-value').forEach(el => {
+        el.style.opacity = '1';
+        el.style.transform = 'translateY(0)';
+      });
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('visible');
+        }
+      });
+    }, { threshold: 0.1 });
+
+    document.querySelectorAll('.feature-card, .journey-step').forEach(el => observer.observe(el));
+  </script>
+</body>
+</html>

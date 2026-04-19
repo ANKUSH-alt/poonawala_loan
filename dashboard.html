@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard – Poonawalla Fincorp Loan Wizard</title>
+  <meta name="description" content="Central logging and audit repository for Poonawalla Fincorp AI Loan Origination System." />
+  <link rel="stylesheet" href="styles/main.css" />
+  <link rel="stylesheet" href="styles/dashboard.css" />
+  <script src="js/auth.js"></script>
+  <script>
+    const user = checkAuth('admin');
+    if (!user) { /* Redirecting... */ }
+  </script>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div id="toast-container"></div>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-icon">🏦</div>
+      <div class="logo-text">
+        <span class="logo-main">Poonawalla</span>
+        <span class="logo-sub">Admin Portal</span>
+      </div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <div class="nav-group">
+        <span class="nav-group-label">Overview</span>
+        <a href="#overview" class="nav-item active" data-tab="overview">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="#applications" class="nav-item" data-tab="applications">
+          <span class="nav-icon">📋</span>
+          <span>Applications</span>
+          <span class="nav-badge" id="app-count-badge">0</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-group-label">AI Intelligence</span>
+        <a href="#risk" class="nav-item" data-tab="risk">
+          <span class="nav-icon">🧠</span>
+          <span>Risk Analysis</span>
+        </a>
+        <a href="#fraud" class="nav-item" data-tab="fraud">
+          <span class="nav-icon">🛡️</span>
+          <span>Fraud Monitor</span>
+          <span class="nav-badge danger">1</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-group-label">Operations</span>
+        <a href="#audit" class="nav-item" data-tab="audit">
+          <span class="nav-icon">📁</span>
+          <span>Audit Logs</span>
+        </a>
+        <a href="#sessions" class="nav-item" data-tab="sessions">
+          <span class="nav-icon">🎥</span>
+          <span>Video Sessions</span>
+        </a>
+      </div>
+
+      <div class="nav-group">
+        <span class="nav-group-label">Config</span>
+        <a href="#policy" class="nav-item" data-tab="policy">
+          <span class="nav-icon">⚙️</span>
+          <span>Policy Rules</span>
+        </a>
+      </div>
+    </nav>
+
+      <div class="sidebar-footer">
+        <div class="sidebar-user">
+          <div class="user-avatar">👤</div>
+          <div>
+            <strong>Admin User</strong>
+            <p class="text-muted" style="font-size:0.72rem;">Risk Manager</p>
+          </div>
+        </div>
+        <div style="display:flex; gap:0.5rem; flex-direction:column; margin-top:1rem;">
+          <a href="index.html" class="btn btn-ghost btn-sm w-full">← Home</a>
+          <button class="btn btn-ghost btn-sm w-full" onclick="logout()" style="color:var(--brand-red);">🚪 Logout</button>
+        </div>
+      </div>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="dashboard-main">
+    <div class="mobile-toggle" id="mobile-sidebar-toggle">
+      <span>☰</span>
+    </div>
+    <!-- Top Bar -->
+    <div class="topbar">
+      <div>
+        <h1 class="topbar-title">AI Loan Origination Dashboard</h1>
+        <p class="topbar-sub">Real-time monitoring • Central Audit Repository • Compliance</p>
+      </div>
+      <div class="topbar-actions">
+        <div class="live-status">
+          <span class="live-dot"></span>
+          <span>System Live</span>
+        </div>
+        <span class="topbar-time" id="topbar-time">—</span>
+        <button class="btn btn-ghost btn-sm" onclick="exportData()">📥 Export Report</button>
+        <button class="btn btn-primary btn-sm" onclick="refreshData()">🔄 Refresh</button>
+      </div>
+    </div>
+
+    <!-- ========== OVERVIEW TAB ========== -->
+    <div class="tab-content active" id="tab-overview">
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="kpi-icon">📋</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Total Applications</span>
+            <span class="kpi-value" id="kpi-total">0</span>
+            <span class="kpi-trend">Real-time count</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-card--green">
+          <div class="kpi-icon">✅</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Approved Today</span>
+            <span class="kpi-value" id="kpi-approved">0</span>
+            <span class="kpi-trend">Verified status</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-card--gold">
+          <div class="kpi-icon">💰</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Total Disbursed (₹)</span>
+            <span class="kpi-value" id="kpi-disbursed">₹0</span>
+            <span class="kpi-trend">Settled amount</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-card--red">
+          <div class="kpi-icon">🛡️</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Fraud Flags</span>
+            <span class="kpi-value" id="kpi-fraud">0</span>
+            <span class="kpi-trend">Secured</span>
+          </div>
+        </div>
+
+        <div class="kpi-card">
+          <div class="kpi-icon">⏱️</div>
+          <div class="kpi-content">
+            <span class="kpi-label">Avg Onboarding Time</span>
+            <span class="kpi-value">~3m</span>
+            <span class="kpi-trend">Fast-track</span>
+          </div>
+        </div>
+
+        <div class="kpi-card kpi-card--purple">
+          <div class="kpi-icon">🤖</div>
+          <div class="kpi-content">
+            <span class="kpi-label">AI Accuracy</span>
+            <span class="kpi-value">98.5%</span>
+            <span class="kpi-trend">Optimized</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="chart-header">
+            <h3>Application Volume (Last 7 Days)</h3>
+            <div class="chart-legend">
+              <span class="legend-dot" style="background:var(--brand-accent)"></span>Applications
+              <span class="legend-dot" style="background:var(--brand-green)"></span>Approved
+            </div>
+          </div>
+          <div class="chart-area" id="volume-chart">
+            <canvas id="volumeCanvas" width="400" height="200"></canvas>
+          </div>
+        </div>
+
+        <div class="chart-card chart-card--sm">
+          <div class="chart-header">
+            <h3>Risk Distribution</h3>
+          </div>
+          <div class="donut-chart-area" id="risk-chart">
+            <canvas id="riskCanvas" width="200" height="200"></canvas>
+            <div class="donut-legend">
+              <div class="donut-leg"><span style="background:var(--brand-green)"></span>A+ Band</div>
+              <div class="donut-leg"><span style="background:var(--brand-accent)"></span>A Band</div>
+              <div class="donut-leg"><span style="background:var(--brand-gold)"></span>B+ Band</div>
+              <div class="donut-leg"><span style="background:var(--brand-red)"></span>B Band</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Applications Table -->
+      <div class="table-card">
+        <div class="table-header">
+          <h3>Recent Applications</h3>
+          <a href="#applications" class="btn btn-ghost btn-sm" onclick="switchTab('applications')">View All →</a>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table" id="recent-table">
+            <thead>
+              <tr>
+                <th>App ID</th>
+                <th>Applicant</th>
+                <th>Amount</th>
+                <th>Rate</th>
+                <th>CIBIL</th>
+                <th>Risk Band</th>
+                <th>Status</th>
+                <th>Time</th>
+              </tr>
+            </thead>
+            <tbody id="recent-tbody">
+              <tr>
+                <td colspan="8" class="no-data">No applications yet. <a href="onboarding.html" style="color:var(--brand-accent)">Start one →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== APPLICATIONS TAB ========== -->
+    <div class="tab-content" id="tab-applications">
+      <div class="tab-header">
+        <h2>All Applications</h2>
+        <div class="tab-header-actions">
+          <input type="text" class="form-input" placeholder="Search by name or ID..." id="search-apps"
+            oninput="filterApplications()" style="width:250px; padding:0.5rem 1rem;" />
+          <select class="form-select" id="filter-status" onchange="filterApplications()" style="width:150px;">
+            <option value="">All Status</option>
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Rejected">Rejected</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="table-card">
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>App ID</th>
+                <th>Applicant</th>
+                <th>Loan Amount</th>
+                <th>Rate</th>
+                <th>Tenure</th>
+                <th>EMI</th>
+                <th>CIBIL</th>
+                <th>Risk Band</th>
+                <th>Status</th>
+                <th>Date/Time</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="apps-tbody">
+              <tr>
+                <td colspan="11" class="no-data">No applications found. <a href="onboarding.html" style="color:var(--brand-accent)">Submit one →</a></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== RISK ANALYSIS TAB ========== -->
+    <div class="tab-content" id="tab-risk">
+      <div class="tab-header">
+        <h2>🧠 AI Risk Analysis Center</h2>
+      </div>
+
+      <div class="risk-analysis-grid">
+        <!-- Model Performance -->
+        <div class="risk-card">
+          <h3>Model Performance</h3>
+          <div class="model-metrics">
+            <div class="model-metric">
+              <span class="mm-label">Age Estimation Accuracy</span>
+              <div class="progress-track"><div class="progress-fill" style="width:96%"></div></div>
+              <span class="mm-value">96.4%</span>
+            </div>
+            <div class="model-metric">
+              <span class="mm-label">Liveness Detection</span>
+              <div class="progress-track"><div class="progress-fill" style="width:99%; background:var(--grad-success)"></div></div>
+              <span class="mm-value">99.1%</span>
+            </div>
+            <div class="model-metric">
+              <span class="mm-label">STT Accuracy (Hindi)</span>
+              <div class="progress-track"><div class="progress-fill" style="width:94%"></div></div>
+              <span class="mm-value">94.3%</span>
+            </div>
+            <div class="model-metric">
+              <span class="mm-label">Risk Classification F1</span>
+              <div class="progress-track"><div class="progress-fill" style="width:91%"></div></div>
+              <span class="mm-value">91.8%</span>
+            </div>
+            <div class="model-metric">
+              <span class="mm-label">Fraud Detection Recall</span>
+              <div class="progress-track"><div class="progress-fill" style="width:88%; background: linear-gradient(135deg,#f5a623,#f7c948)"></div></div>
+              <span class="mm-value">88.5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- LLM Classification -->
+        <div class="risk-card">
+          <h3>LLM Classification Details</h3>
+          <div class="llm-output">
+            <div class="llm-header">
+              <span class="badge badge-purple">Gemini AI Output</span>
+              <span class="text-muted" style="font-size:0.75rem;">Analysis from latest session</span>
+            </div>
+            <div class="llm-output-box">
+              <div id="ai-json-output" class="text-muted p-md" style="font-size:0.85rem;">
+                Select an application to view deep AI analysis results.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Risk Band Distribution -->
+        <div class="risk-card risk-card--wide">
+          <h3>Risk Band Distribution Across Applications</h3>
+          <div class="band-bars">
+            <div class="band-bar-row">
+              <span class="band-label">A+ (Prime)</span>
+              <div class="band-track">
+                <div class="band-fill" style="width:0%; background:var(--brand-green)" id="band-fill-aplus">0%</div>
+              </div>
+              <span class="band-count" id="band-count-aplus">0</span>
+            </div>
+            <div class="band-bar-row">
+              <span class="band-label">A (Good)</span>
+              <div class="band-track">
+                <div class="band-fill" style="width:0%; background:var(--brand-accent)" id="band-fill-a">0%</div>
+              </div>
+              <span class="band-count" id="band-count-a">0</span>
+            </div>
+            <div class="band-bar-row">
+              <span class="band-label">B+ (Fair)</span>
+              <div class="band-track">
+                <div class="band-fill" style="width:0%; background:var(--brand-gold)" id="band-fill-bplus">0%</div>
+              </div>
+              <span class="band-count" id="band-count-bplus">0</span>
+            </div>
+            <div class="band-bar-row">
+              <span class="band-label">B (Subprime)</span>
+              <div class="band-track">
+                <div class="band-fill" style="width:0%; background:var(--brand-red)" id="band-fill-b">0%</div>
+              </div>
+              <span class="band-count" id="band-count-b">0</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== FRAUD MONITOR TAB ========== -->
+    <div class="tab-content" id="tab-fraud">
+      <div class="tab-header">
+        <h2>🛡️ Fraud Monitor</h2>
+        <span class="badge badge-danger">1 Alert Active</span>
+      </div>
+
+      <div class="fraud-alerts">
+        <div class="fraud-alert alert-high">
+          <div class="fa-header">
+            <span class="fa-severity high">🔴 HIGH</span>
+            <span class="fa-id">ALERT-2024-001</span>
+            <span class="fa-time">Today, 14:32 IST</span>
+          </div>
+          <div class="fa-content">
+            <strong>Location Mismatch Detected</strong>
+            <p>Applicant declared Mumbai, Maharashtra but geo-coordinates indicate connection from Gurgaon, Haryana. IP geolocation confirms NCR region. Session flagged for manual review.</p>
+          </div>
+          <div class="fa-actions">
+            <button class="btn btn-ghost btn-sm">View Session</button>
+            <button class="btn btn-sm" style="background:var(--brand-gold); color:#1a0a00;">Mark for Review</button>
+            <button class="btn btn-ghost btn-sm" style="color:var(--brand-green);">Clear Flag</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="fraud-signals">
+        <h3>Fraud Signal Matrix</h3>
+        <div class="signal-grid">
+          <div class="signal-item signal-ok"><span>✅</span><span>Liveness verified (not spoofed)</span></div>
+          <div class="signal-item signal-ok"><span>✅</span><span>Age matches declared DOB (±3 years)</span></div>
+          <div class="signal-item signal-warn"><span>⚠️</span><span>Location mismatch detected</span></div>
+          <div class="signal-item signal-ok"><span>✅</span><span>STT matches form data (consistency &gt; 90%)</span></div>
+          <div class="signal-item signal-ok"><span>✅</span><span>No previous fraud history</span></div>
+          <div class="signal-item signal-ok"><span>✅</span><span>Device fingerprint: trusted device</span></div>
+          <div class="signal-item signal-ok"><span>✅</span><span>Verbal consent recorded and verified</span></div>
+          <div class="signal-item signal-ok"><span>✅</span><span>PAN and Aadhaar format validation passed</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== AUDIT LOGS TAB ========== -->
+    <div class="tab-content" id="tab-audit">
+      <div class="tab-header">
+        <h2>📁 Central Audit Repository</h2>
+        <div class="tab-header-actions">
+          <span class="badge badge-accent">RBI Compliant</span>
+          <button class="btn btn-ghost btn-sm" onclick="exportAuditLog()">📥 Export CSV</button>
+        </div>
+      </div>
+
+      <div class="audit-filters">
+        <select class="form-select" id="audit-filter-type" style="width:200px;">
+          <option value="">All Event Types</option>
+          <option value="KYC">KYC Events</option>
+          <option value="Consent">Consent Events</option>
+          <option value="Analysis">AI Analysis</option>
+          <option value="Offer">Offer Events</option>
+        </select>
+        <input type="date" class="form-input" id="audit-date-from" style="width:160px;" />
+        <span class="text-muted">to</span>
+        <input type="date" class="form-input" id="audit-date-to" style="width:160px;" />
+        <button class="btn btn-ghost btn-sm">Filter</button>
+      </div>
+
+      <div class="table-card mt-lg">
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Session ID</th>
+                <th>Event Type</th>
+                <th>Event Detail</th>
+                <th>Actor</th>
+                <th>IP Address</th>
+                <th>Status</th>
+                <th>Hash</th>
+              </tr>
+            </thead>
+            <tbody id="audit-tbody">
+              <!-- Populated by JS -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== VIDEO SESSIONS TAB ========== -->
+    <div class="tab-content" id="tab-sessions">
+      <div class="tab-header">
+        <h2>🎥 Video Session Repository</h2>
+      </div>
+
+      <div class="sessions-grid" id="sessions-grid">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+
+    <!-- ========== POLICY TAB ========== -->
+    <div class="tab-content" id="tab-policy">
+      <div class="tab-header">
+        <h2>⚙️ Policy Configuration</h2>
+        <button class="btn btn-primary btn-sm" onclick="savePolicies()">💾 Save Changes</button>
+      </div>
+
+      <div class="policy-grid">
+        <div class="policy-section">
+          <h3>Eligibility Rules</h3>
+          <div class="policy-rule">
+            <label class="form-label">Minimum Age</label>
+            <input type="number" class="form-input" value="21" id="p-min-age" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Maximum Age</label>
+            <input type="number" class="form-input" value="65" id="p-max-age" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Minimum CIBIL Score</label>
+            <input type="number" class="form-input" value="650" id="p-min-cibil" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Minimum Monthly Income (₹)</label>
+            <input type="number" class="form-input" value="25000" id="p-min-income" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Max Debt-to-Income Ratio (%)</label>
+            <input type="number" class="form-input" value="50" id="p-max-dti" />
+          </div>
+        </div>
+
+        <div class="policy-section">
+          <h3>Loan Parameters</h3>
+          <div class="policy-rule">
+            <label class="form-label">Min Loan Amount (₹)</label>
+            <input type="number" class="form-input" value="100000" id="p-min-loan" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Max Loan Amount (₹)</label>
+            <input type="number" class="form-input" value="5000000" id="p-max-loan" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Min Tenure (months)</label>
+            <input type="number" class="form-input" value="12" id="p-min-tenure" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Max Tenure (months)</label>
+            <input type="number" class="form-input" value="84" id="p-max-tenure" />
+          </div>
+        </div>
+
+        <div class="policy-section">
+          <h3>Interest Rate Config</h3>
+          <div class="policy-rule">
+            <label class="form-label">A+ Band Rate (% p.a.)</label>
+            <input type="number" class="form-input" value="10.5" step="0.25" id="p-rate-aplus" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">A Band Rate (% p.a.)</label>
+            <input type="number" class="form-input" value="11.5" step="0.25" id="p-rate-a" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">B+ Band Rate (% p.a.)</label>
+            <input type="number" class="form-input" value="13.0" step="0.25" id="p-rate-bplus" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">B Band Rate (% p.a.)</label>
+            <input type="number" class="form-input" value="15.0" step="0.25" id="p-rate-b" />
+          </div>
+        </div>
+
+        <div class="policy-section">
+          <h3>Fraud Thresholds</h3>
+          <div class="policy-rule">
+            <label class="form-label">Geo Mismatch Tolerance (km)</label>
+            <input type="number" class="form-input" value="50" id="p-geo-tol" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Age Est. Variance Threshold (years)</label>
+            <input type="number" class="form-input" value="5" id="p-age-var" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">STT Consistency Min Score</label>
+            <input type="number" class="form-input" value="0.75" step="0.05" id="p-stt-min" />
+          </div>
+          <div class="policy-rule">
+            <label class="form-label">Liveness Min Score</label>
+            <input type="number" class="form-input" value="0.90" step="0.05" id="p-live-min" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>
