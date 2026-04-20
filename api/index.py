@@ -23,9 +23,15 @@ load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 MONGODB_URI = os.getenv("MONGODB_URI", "mongodb://localhost:27017")
 
-# Configure AI
-genai.configure(api_key=GEMINI_API_KEY)
-model = genai.GenerativeModel('gemini-1.5-flash')
+# Configure AI (Lazy initialization)
+def get_ai_model():
+    if not GEMINI_API_KEY:
+        return None
+    try:
+        genai.configure(api_key=GEMINI_API_KEY)
+        return genai.GenerativeModel('gemini-1.5-flash')
+    except:
+        return None
 
 app = Flask(__name__)
 CORS(app)
@@ -112,7 +118,9 @@ def seed_demo_data():
     """
 
     try:
-        response = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
+        ai_model = get_ai_model()
+        if not ai_model: raise Exception("AI Model not available")
+        response = ai_model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
         app_data = json.loads(response.text)
         
         app_num = 'PF10000000'
@@ -184,6 +192,15 @@ def serve_static(path):
     full = os.path.join(FRONTEND_DIR, path)
     if os.path.isfile(full): return send_from_directory(FRONTEND_DIR, path)
     return send_from_directory(FRONTEND_DIR, 'index.html')
+
+# ─── API: HEALTH CHECK ───────────────────────────────────────────────────────
+@app.route('/api/health')
+def health():
+    return jsonify({
+        'status': 'ok',
+        'db_connected': db is not None,
+        'ai_configured': bool(GEMINI_API_KEY)
+    })
 
 # ─── API: AUTHENTICATION ───────────────────────────────────────────────────
 @app.route('/api/auth/login', methods=['POST'])
@@ -296,7 +313,11 @@ def run_analysis():
 
     try:
         # 2. Call Gemini
-        response = model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
+        ai_model = get_ai_model()
+        if not ai_model:
+            return jsonify({'error': 'AI configuration missing (GEMINI_API_KEY)'}), 500
+            
+        response = ai_model.generate_content(prompt, generation_config={"response_mime_type": "application/json"})
         ai_result = json.loads(response.text)
         
         # 3. Handle specific logic (override if policy says so)
