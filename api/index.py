@@ -189,25 +189,31 @@ def serve_static(path):
 @app.route('/api/auth/login', methods=['POST'])
 def login():
     data = request.json or {}
-    username = data.get('username')
-    password = data.get('password')
-    
-    user = db.users.find_one({'username': username, 'password': password})
-    if not user:
-        return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
-    
-    return jsonify({
-        'success': True,
-        'user': {
-            'username': user['username'],
-            'role': user['role'],
-            'full_name': user.get('full_name', 'User')
-        }
-    })
+    if db is None:
+        return jsonify({'success': False, 'message': 'Database connection error. Please check MONGODB_URI.'}), 503
+        
+    try:
+        user = db.users.find_one({'username': username, 'password': password})
+        if not user:
+            return jsonify({'success': False, 'message': 'Invalid credentials'}), 401
+        
+        return jsonify({
+            'success': True,
+            'user': {
+                'username': user['username'],
+                'role': user['role'],
+                'full_name': user.get('full_name', 'User')
+            }
+        })
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'DB Error: {str(e)}'}), 500
 
 @app.route('/api/auth/register', methods=['POST'])
 def register():
     data = request.json or {}
+    if db is None:
+        return jsonify({'success': False, 'message': 'Database connection error'}), 503
+        
     if db.users.find_one({'username': data['username']}):
         return jsonify({'success': False, 'message': 'Username already exists'}), 400
     

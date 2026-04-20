@@ -168,11 +168,13 @@
             }
           }, 1500);
         } else {
+          console.error('Login failed:', data);
           showToast(data.message || 'Login failed', 'error');
           btn.disabled = false;
           btn.textContent = 'Login to System';
         }
       } catch (err) {
+        console.error('Connection error:', err);
         showToast('Server connection failed', 'error');
         btn.disabled = false;
         btn.textContent = 'Login to System';
