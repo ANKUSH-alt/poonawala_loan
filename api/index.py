@@ -205,10 +205,20 @@ def health():
         except Exception as e:
             db_err = str(e)
             
+    user_count = 0
+    if db_status:
+        try:
+            user_count = db.users.count_documents({})
+        except:
+            pass
+            
     return jsonify({
         'status': 'ok',
         'db_connected': db_status,
         'db_error': db_err,
+        'users_count': user_count,
+        'request_path': request.path,
+        'request_url': request.url,
         'ai_configured': bool(GEMINI_API_KEY)
     })
 
