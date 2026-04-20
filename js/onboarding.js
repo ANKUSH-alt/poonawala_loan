@@ -225,7 +225,7 @@ const AI_QUESTIONS = [
 const ANALYSIS_RESULTS = [
   { id: 'm-face',     value: '✅ Detected',    color: 'var(--brand-green)',  delay: 2000 },
   { id: 'm-liveness', value: '✅ Live Person',  color: 'var(--brand-green)',  delay: 4000 },
-  { id: 'm-age',      value: '🎯 ~32 years',   color: 'var(--brand-accent)', delay: 6000 },
+  { id: 'm-age',      value: '🎯 -- years',   color: 'var(--brand-accent)', delay: 6000 }, // Will be dynamic
   { id: 'm-identity', value: '✅ Verified',     color: 'var(--brand-green)',  delay: 8000 },
   { id: 'm-audio',    value: '✅ HD Clear',     color: 'var(--brand-green)',  delay: 3000 },
   { id: 'm-consent',  value: '⏳ Pending',      color: 'var(--brand-gold)',   delay: 1000 }
@@ -316,6 +316,7 @@ function runAIQuestionFlow() {
 
     const q = AI_QUESTIONS[idx];
     const qNum = idx + 1;
+    const userName = document.getElementById('full-name').value.trim() || 'Applicant';
 
     document.getElementById('q-text').textContent = q.q;
     document.querySelector('.q-number').textContent = `Q${qNum} of ${AI_QUESTIONS.length}`;
@@ -324,7 +325,16 @@ function runAIQuestionFlow() {
     setTimeout(() => {
       addTranscriptMsg('agent', q.q);
       setTimeout(() => {
-        addTranscriptMsg('customer', q.answer);
+        let personalAnswer = q.answer.replace(/Rahul Kumar Sharma/g, userName);
+        
+        // Handle dynamic income and loan details
+        const income = document.getElementById('monthly-income').value;
+        const purpose = document.getElementById('loan-purpose-detail').options[document.getElementById('loan-purpose-detail').selectedIndex]?.text || '';
+        
+        if (income) personalAnswer = personalAnswer.replace(/₹85,000/g, `₹${income}`);
+        if (purpose) personalAnswer = personalAnswer.replace(/home renovation loan/g, purpose.toLowerCase());
+        
+        addTranscriptMsg('customer', personalAnswer);
         const aw = document.getElementById('agent-speaking');
         aw.style.opacity = '0';
         setTimeout(() => { aw.style.opacity = '1'; }, 1000);
@@ -338,11 +348,23 @@ function runAIQuestionFlow() {
 }
 
 function startRealTimeAnalysis() {
+  const dob = document.getElementById('dob').value;
+  let estimatedAge = '~32';
+  if (dob) {
+    const birthYear = new Date(dob).getFullYear();
+    const currentYear = new Date().getFullYear();
+    estimatedAge = `~${currentYear - birthYear}`;
+  }
+
   ANALYSIS_RESULTS.forEach(item => {
     setTimeout(() => {
       const el = document.getElementById(item.id);
       if (el) {
-        el.textContent = item.value;
+        if (item.id === 'm-age') {
+            el.textContent = `🎯 ${estimatedAge} years`;
+        } else {
+            el.textContent = item.value;
+        }
         el.style.color = item.color;
       }
     }, item.delay);
