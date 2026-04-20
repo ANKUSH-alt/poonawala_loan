@@ -34,10 +34,27 @@
         <li><a href="#how-it-works">How It Works</a></li>
         <li><a href="#eligibility">Eligibility</a></li>
       </ul>
-      <div class="navbar-actions">
+      <div class="navbar-actions" id="nav-actions">
         <a href="login.html" class="btn btn-ghost btn-sm">Login</a>
         <a href="onboarding.html" class="btn btn-gold btn-sm">Apply Now →</a>
       </div>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          const authData = localStorage.getItem('pf_auth');
+          if (authData) {
+            const user = JSON.parse(authData);
+            const navActions = document.getElementById('nav-actions');
+            navActions.innerHTML = `
+              <div style="display:flex; align-items:center; gap:1rem;">
+                <span class="nav-user-name" style="font-weight:600; color:var(--brand-gold); font-size:0.9rem;">${user.full_name || user.username}</span>
+                <a href="${user.role === 'admin' ? 'dashboard.html' : 'user-dashboard.html'}" class="btn btn-ghost btn-sm">My Dashboard</a>
+                <a href="onboarding.html" class="btn btn-gold btn-sm">New Application →</a>
+              </div>
+            `;
+          }
+        });
+      </script>
     </div>
   </nav>
 

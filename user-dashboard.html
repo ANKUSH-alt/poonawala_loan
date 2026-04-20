@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Dashboard – Poonawalla Fincorp Loan Wizard</title>
+  <link rel="stylesheet" href="styles/main.css" />
+  <style>
+    .user-dashboard {
+      min-height: 100vh;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .welcome-text h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: #fff;
+    }
+    .app-status-card {
+      background: rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+    .status-badge {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      border-radius: 99px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .status-approved { background: rgba(34, 197, 94, 0.2); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .status-pending { background: rgba(234, 179, 8, 0.2); color: #facc15; border: 1px solid rgba(234, 179, 8, 0.3); }
+    .status-rejected { background: rgba(239, 68, 68, 0.2); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-top: 1.5rem;
+    }
+    .detail-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+    .detail-label {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+    .detail-value {
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    .no-apps {
+      text-align: center;
+      padding: 4rem 2rem;
+      color: var(--text-muted);
+    }
+  </style>
+  <script src="js/auth.js"></script>
+</head>
+<body>
+  <div class="grid-bg"></div>
+  <div id="toast-container"></div>
+
+  <div class="user-dashboard">
+    <div class="header">
+      <div class="welcome-text">
+        <p class="text-secondary" style="font-size: 0.9rem; margin-bottom: 0.25rem;">Welcome back,</p>
+        <h1 id="user-name">User</h1>
+      </div>
+      <div style="display: flex; gap: 1rem;">
+        <a href="index.html" class="btn btn-ghost btn-sm">Home</a>
+        <button class="btn btn-primary btn-sm" onclick="logout()">Logout</button>
+      </div>
+    </div>
+
+    <div class="dashboard-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 700; color: #fff;">My Applications</h2>
+        <a href="onboarding.html" class="btn btn-gold btn-sm">New Application +</a>
+      </div>
+
+      <div id="applications-list">
+        <div class="no-apps">
+          <div style="font-size: 3rem; margin-bottom: 1rem;">📋</div>
+          <p>You haven't submitted any applications yet.</p>
+          <a href="onboarding.html" class="btn btn-gold btn-sm" style="margin-top: 1.5rem;">Start Your Journey</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API = window.location.origin.includes('localhost') ? 'http://localhost:5001/api' : '/api';
+    const currentUser = checkAuth(); // Ensures user is logged in
+
+    if (currentUser) {
+      document.getElementById('user-name').textContent = currentUser.full_name || currentUser.username;
+      loadApplications();
+    }
+
+    async function loadApplications() {
+      try {
+        const resp = await fetch(`${API}/my-applications/${currentUser.username}`);
+        const data = await resp.json();
+
+        if (data.success && data.applications.length > 0) {
+          renderApplications(data.applications);
+        }
+      } catch (err) {
+        console.error('Failed to load applications', err);
+      }
+    }
+
+    function renderApplications(apps) {
+      const container = document.getElementById('applications-list');
+      container.innerHTML = '';
+
+      apps.forEach(app => {
+        const card = document.createElement('div');
+        card.className = 'app-status-card';
+        
+        const statusClass = `status-${(app.status || 'pending').toLowerCase()}`;
+        
+        card.innerHTML = `
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.5rem;">
+            <div>
+              <span style="font-size: 0.8rem; color: var(--brand-gold); font-weight: 700; margin-bottom: 0.5rem; display: block;">APP ID: ${app.app_num || 'PENDING'}</span>
+              <h3 style="font-size: 1.25rem; font-weight: 700; color: #fff;">${app.loan_purpose?.replace('_', ' ').toUpperCase() || 'PERSONAL LOAN'}</h3>
+              <p style="font-size: 0.85rem; color: var(--text-muted);">Submitted on ${new Date(app.created_at).toLocaleDateString()}</p>
+            </div>
+            <span class="status-badge ${statusClass}">${app.status || 'Pending'}</span>
+          </div>
+
+          <div class="app-grid">
+            <div class="detail-item">
+              <span class="detail-label">Required Amount</span>
+              <span class="detail-value">₹${app.loan_required?.toLocaleString()}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">AI Risk Band</span>
+              <span class="detail-value">${app.risk_band || 'In Analysis...'}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">CIBIL Score</span>
+              <span class="detail-value">${app.cibil_score || '—'}</span>
+            </div>
+            ${app.offer_amount ? `
+            <div class="detail-item">
+              <span class="detail-label">Approved Amount</span>
+              <span class="detail-value" style="color: var(--brand-green);">₹${app.offer_amount.toLocaleString()}</span>
+            </div>
+            <div class="detail-item">
+              <span class="detail-label">EMI</span>
+              <span class="detail-value">₹${app.offer_emi?.toLocaleString()} / mo</span>
+            </div>
+            ` : ''}
+          </div>
+          
+          ${app.status === 'Approved' ? `
+          <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid rgba(255,255,255,0.05);">
+             <p style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 1rem;">${app.ai_insight || 'Our AI has approved your application based on your profile.'}</p>
+             <button class="btn btn-gold btn-sm" onclick="window.location.href='offers.html'">View Full Offer Details</button>
+          </div>
+          ` : ''}
+        `;
+        container.appendChild(card);
+      });
+    }
+  </script>
+</body>
+</html>

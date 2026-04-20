@@ -30,6 +30,9 @@ model = genai.GenerativeModel('gemini-1.5-flash')
 app = Flask(__name__)
 CORS(app)
 
+# Path to the root directory where index.html and other static files reside
+FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+
 # ─── DATABASE INIT ───────────────────────────────────────────────────────────
 try:
     client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
@@ -57,23 +60,33 @@ def init_db():
         ]
         db.policy_config.insert_many(default_policies)
     
-    # Clear "raw data" and seed only one Admin user if requested
-    print("🧹 Cleaning raw data and setting up Admin user...")
-    db.applications.delete_many({})
-    db.audit_logs.delete_many({})
-    db.consents.delete_many({})
-    db.video_sessions.delete_many({})
-    db.users.delete_many({})
-    
-    # Seed default admin
-    db.users.insert_one({
-        'username': 'admin@poonawalla.com',
-        'password': 'Poonawalla@2025',
-        'role': 'admin',
-        'full_name': 'System Administrator'
-    })
-    
-    seed_demo_data()
+    # ONLY clear data if specifically requested or if it's a fresh local install
+    # On Vercel/Production, we should NOT wipe the DB on every import
+    if os.getenv("SEED_DB") == "true":
+        print("🧹 Cleaning raw data and setting up Admin user...")
+        db.applications.delete_many({})
+        db.audit_logs.delete_many({})
+        db.consents.delete_many({})
+        db.video_sessions.delete_many({})
+        db.users.delete_many({})
+        
+        # Seed default admin
+        db.users.insert_one({
+            'username': 'admin@poonawalla.com',
+            'password': 'Poonawalla@2025',
+            'role': 'admin',
+            'full_name': 'System Administrator'
+        })
+        seed_demo_data()
+    else:
+        # Ensure at least one admin exists if not already present
+        if db.users.count_documents({'role': 'admin'}) == 0:
+            db.users.insert_one({
+                'username': 'admin@poonawalla.com',
+                'password': 'Poonawalla@2025',
+                'role': 'admin',
+                'full_name': 'System Administrator'
+            })
 
 def seed_demo_data():
     """Use Gemini to seed one realistic Admin application instead of raw hardcoded lists"""
@@ -134,9 +147,9 @@ def seed_demo_data():
                 'status': 'Logged', 'event_hash': ev_hash, 'created_at': ev_ts
             })
             
-        print(\"✅ Successfully seeded Admin application.\")
+        print("✅ Successfully seeded Admin application.")
     except Exception as e:
-        print(f\"❌ Failed to generate AI seed data: {e}\")
+        print(f"❌ Failed to generate AI seed data: {e}")
         db.applications.insert_one({
             'app_num': 'PF10000000', 'session_id': 'ADMIN_SESSION', 'full_name': 'Admin User',
             'mobile': '9876543210', 'pan': 'ABCDE1234F', 'monthly_income': 150000,
@@ -219,6 +232,7 @@ def save_details():
         'monthly_income': float(data['monthly_income']), 'loan_purpose': data['loan_purpose'],
         'loan_required': float(data['loan_required']), 'city': data.get('city',''),
         'geo_lat': data.get('geo_lat'), 'geo_lon': data.get('geo_lon'),
+        'username': data.get('username'), # Link to user if logged in
         'updated_at': datetime.now()
     }
     result = db.applications.update_one({'session_id': data['session_id']}, {'$set': app_data}, upsert=True)
@@ -380,6 +394,12 @@ def get_applications():
     apps = list(db.applications.find().sort('created_at', -1).limit(100))
     for a in apps: a['_id'] = str(a['_id'])
     return jsonify({'success': True, 'applications': apps, 'count': len(apps)})
+
+@app.route('/api/my-applications/<username>', methods=['GET'])
+def get_my_applications(username):
+    apps = list(db.applications.find({'username': username}).sort('created_at', -1))
+    for a in apps: a['_id'] = str(a['_id'])
+    return jsonify({'success': True, 'applications': apps})
 
 @app.route('/api/policy', methods=['GET', 'POST'])
 def handle_policy():

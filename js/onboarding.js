@@ -82,6 +82,13 @@ async function proceedToConsent() {
   btn.innerHTML = '<div class="spinner"></div> Saving...';
   btn.disabled = true;
 
+  let username = null;
+  const authData = localStorage.getItem('pf_auth');
+  if (authData) {
+    const user = JSON.parse(authData);
+    username = user.username;
+  }
+
   try {
     const resp = await fetch(`${API}/application/details`, {
       method: 'POST',
@@ -91,7 +98,8 @@ async function proceedToConsent() {
         monthly_income: parseFloat(income), loan_purpose: purpose,
         loan_required: parseFloat(loan) || 0, city,
         geo_lat: parseFloat(localStorage.getItem('pf_lat') || 0) || null,
-        geo_lon: parseFloat(localStorage.getItem('pf_lon') || 0) || null
+        geo_lon: parseFloat(localStorage.getItem('pf_lon') || 0) || null,
+        username: username
       })
     });
     const data = await resp.json();
