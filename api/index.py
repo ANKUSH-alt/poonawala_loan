@@ -226,8 +226,17 @@ def health():
 @app.route('/api/auth/login', methods=['POST'])
 def login():
     data = request.json or {}
+    username = data.get('username')
+    password = data.get('password')
+
+    # --- DEMO MODE BYPASS ---
     if db is None:
-        return jsonify({'success': False, 'message': 'Database connection error. Please check MONGODB_URI.'}), 503
+        if username == 'admin@poonawalla.com' and password == 'Poonawalla@2025':
+            return jsonify({
+                'success': True,
+                'user': {'username': username, 'role': 'admin', 'full_name': 'System Administrator (Demo Mode)'}
+            })
+        return jsonify({'success': False, 'message': 'Demo Mode active. Use admin@poonawalla.com / Poonawalla@2025'}), 401
         
     try:
         user = db.users.find_one({'username': username, 'password': password})
@@ -408,6 +417,15 @@ def accept_offer():
 # ─── API: DASHBOARD ──────────────────────────────────────────────────────────
 @app.route('/api/dashboard/overview', methods=['GET'])
 def dashboard_overview():
+    if db is None:
+        # Mock Overview Data
+        return jsonify({
+            'success': True, 'total_applications': 1, 'approved': 1,
+            'total_disbursed': 1500000, 'fraud_flags': 0,
+            'volume_chart': [{'day': 'Mon', 'total': 1, 'approved': 1}],
+            'risk_distribution': {'A+': 1, 'A': 0, 'B+': 0, 'B': 0}
+        })
+        
     total = db.applications.count_documents({})
     approved_docs = list(db.applications.find({'status': 'Approved'}))
     total_disbursed = sum(doc.get('offer_amount', 0) or 0 for doc in approved_docs)
@@ -439,12 +457,16 @@ def dashboard_overview():
 
 @app.route('/api/dashboard/applications', methods=['GET'])
 def get_applications():
+    if db is None:
+        return jsonify({'success': True, 'applications': [], 'count': 0})
     apps = list(db.applications.find().sort('created_at', -1).limit(100))
     for a in apps: a['_id'] = str(a['_id'])
     return jsonify({'success': True, 'applications': apps, 'count': len(apps)})
 
 @app.route('/api/my-applications/<username>', methods=['GET'])
 def get_my_applications(username):
+    if db is None:
+        return jsonify({'success': True, 'applications': []})
     apps = list(db.applications.find({'username': username}).sort('created_at', -1))
     for a in apps: a['_id'] = str(a['_id'])
     return jsonify({'success': True, 'applications': apps})
