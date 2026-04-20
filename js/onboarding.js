@@ -6,6 +6,14 @@
 const API = window.location.origin.includes('localhost') ? 'http://localhost:5001/api' : '/api';
 let currentApplication = {};
 
+// Helper: Calculate age from DOB string
+function calculateAge(dob) {
+  if (!dob) return 32;
+  const birthYear = new Date(dob).getFullYear();
+  const currentYear = new Date().getFullYear();
+  return currentYear - birthYear;
+}
+
 // ─── SESSION INIT ────────────────────────────────────────
 const SESSION_ID = Math.random().toString(36).substring(2, 10).toUpperCase();
 document.getElementById('session-id-display').textContent = SESSION_ID;
@@ -352,12 +360,7 @@ function runAIQuestionFlow() {
 
 function startRealTimeAnalysis() {
   const dob = document.getElementById('dob').value;
-  let estimatedAge = '~32';
-  if (dob) {
-    const birthYear = new Date(dob).getFullYear();
-    const currentYear = new Date().getFullYear();
-    estimatedAge = `~${currentYear - birthYear}`;
-  }
+  const estimatedAge = calculateAge(dob);
 
   ANALYSIS_RESULTS.forEach(item => {
     setTimeout(() => {
@@ -456,7 +459,8 @@ function runAIAnalysis() {
           // Fallback simulation
           const cibil = Math.floor(Math.random() * 80) + 720;
           const riskBand = cibil >= 760 ? 'A+' : cibil >= 720 ? 'A' : 'B+';
-          analysisResults = { cibil_score: cibil, risk_band: riskBand, age_estimated: 32, ai_confidence: 0.964 };
+          const dob = document.getElementById('dob').value;
+          analysisResults = { cibil_score: cibil, risk_band: riskBand, age_estimated: calculateAge(dob), ai_confidence: 0.964 };
           localStorage.setItem('pf_cibil', cibil);
           localStorage.setItem('pf_risk', riskBand);
           localStorage.setItem('pf_session', SESSION_ID);
@@ -471,7 +475,8 @@ function showAnalysisDone(results) {
   const data = results || {};
   const riskBand = data.risk_band || localStorage.getItem('pf_risk') || 'A';
   const cibil    = data.cibil_score || parseInt(localStorage.getItem('pf_cibil')) || 750;
-  const age      = data.age_estimated || 32;
+  const dob      = document.getElementById('dob').value;
+  const age      = data.age_estimated || calculateAge(dob);
 
   document.getElementById('sum-risk').textContent   = riskBand;
   document.getElementById('sum-cibil').textContent  = cibil;
