@@ -41,13 +41,20 @@ CORS(app)
 FRONTEND_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
 
 # ─── DATABASE INIT ───────────────────────────────────────────────────────────
-try:
-    client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
-    db = client.get_database("poonawalla_loan_db")
-    print(f"✅ Securely connected to MongoDB")
-except Exception as e:
-    print(f"❌ Connection error: {e}")
+# Silently skip connection if the URI is still the placeholder or localhost
+if "abcde" in MONGODB_URI or "localhost" in MONGODB_URI:
+    print("⚠️ Using Demo Mode: MONGODB_URI not configured.")
     db = None
+else:
+    try:
+        client = MongoClient(MONGODB_URI, serverSelectionTimeoutMS=2000)
+        db = client.get_database("poonawalla_loan_db")
+        # Test connection immediately
+        client.admin.command('ping')
+        print(f"✅ Securely connected to MongoDB")
+    except Exception as e:
+        print(f"❌ Connection error: {e}")
+        db = None
 
 def init_db():
     if db is None: return
@@ -198,28 +205,23 @@ def serve_static(path):
 def health():
     db_status = False
     db_err = None
+    
     if db is not None:
         try:
-            db.users.count_documents({})
+            client.admin.command('ping')
             db_status = True
         except Exception as e:
             db_err = str(e)
             
-    user_count = 0
-    if db_status:
-        try:
-            user_count = db.users.count_documents({})
-        except:
-            pass
+    mode = "Production" if db_status else "Demo/Fallback"
             
     return jsonify({
         'status': 'ok',
+        'mode': mode,
         'db_connected': db_status,
-        'db_error': db_err,
-        'users_count': user_count,
-        'request_path': request.path,
-        'request_url': request.url,
-        'ai_configured': bool(GEMINI_API_KEY)
+        'db_error': db_err if db_status is False and "abcde" not in MONGODB_URI else None,
+        'ai_configured': bool(GEMINI_API_KEY),
+        'request_path': request.path
     })
 
 # ─── API: AUTHENTICATION ───────────────────────────────────────────────────
