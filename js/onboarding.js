@@ -247,11 +247,14 @@ async function startCamera() {
     document.getElementById('no-camera').style.display = 'none';
     showToast('Camera & microphone connected', 'success');
   } catch (e) {
-    showToast('Camera not available – running in demo mode', 'info');
+    console.error('Camera access error:', e);
+    showToast('Camera access denied. Please allow camera permissions in your browser settings.', 'error');
+    document.getElementById('no-camera').style.display = 'flex';
     document.getElementById('no-camera').innerHTML = `
-      <div style="font-size:4rem">🎭</div>
-      <p style="color:var(--brand-accent); font-weight:600;">DEMO MODE</p>
-      <p style="color:var(--text-muted); font-size:0.78rem;">Simulating video feed</p>
+      <div style="font-size:3rem">🔒</div>
+      <p style="color:var(--brand-accent); font-weight:600; margin-top:1rem;">Camera Access Required</p>
+      <p style="color:var(--text-secondary); font-size:0.85rem; max-width:250px; margin:0.5rem auto;">Please click the <strong>lock icon</strong> in your browser address bar and set Camera to <strong>Allow</strong>.</p>
+      <button class="btn btn-gold btn-sm mt-md" onclick="startCamera()">Retry Access 🎥</button>
     `;
   }
 }
