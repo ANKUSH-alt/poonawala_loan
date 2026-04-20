@@ -196,9 +196,19 @@ def serve_static(path):
 # ─── API: HEALTH CHECK ───────────────────────────────────────────────────────
 @app.route('/api/health')
 def health():
+    db_status = False
+    db_err = None
+    if db is not None:
+        try:
+            db.users.count_documents({})
+            db_status = True
+        except Exception as e:
+            db_err = str(e)
+            
     return jsonify({
         'status': 'ok',
-        'db_connected': db is not None,
+        'db_connected': db_status,
+        'db_error': db_err,
         'ai_configured': bool(GEMINI_API_KEY)
     })
 
