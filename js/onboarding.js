@@ -10,29 +10,7 @@ let currentApplication = {};
 const SESSION_ID = Math.random().toString(36).substring(2, 10).toUpperCase();
 document.getElementById('session-id-display').textContent = SESSION_ID;
 
-// Load pre-filled data from landing page (still use localStorage for cross-page prefill)
-const prefilled = {
-  income:     localStorage.getItem('pf_income') || '',
-  employment: localStorage.getItem('pf_employment') || '',
-  purpose:    localStorage.getItem('pf_purpose') || '',
-  amount:     localStorage.getItem('pf_amount') || ''
-};
-
 window.addEventListener('DOMContentLoaded', () => {
-  if (prefilled.employment) document.getElementById('emp-type').value = prefilled.employment;
-  if (prefilled.purpose)    document.getElementById('loan-purpose-detail').value = prefilled.purpose;
-
-  // Demo defaults for quick testing
-  document.getElementById('full-name').value        = 'Rahul Kumar Sharma';
-  document.getElementById('mobile').value           = '9876543210';
-  document.getElementById('dob').value              = '1992-06-15';
-  document.getElementById('pan').value              = 'ABCDE1234F';
-  document.getElementById('emp-type').value         = 'salaried';
-  document.getElementById('monthly-income').value   = '85000';
-  document.getElementById('loan-purpose-detail').value = 'home';
-  document.getElementById('loan-required').value    = '1500000';
-  document.getElementById('city').value             = 'Mumbai, Maharashtra';
-
   updateStepIndicator(1);
 });
 

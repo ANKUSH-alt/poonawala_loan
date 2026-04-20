@@ -560,11 +560,7 @@
       btn.innerHTML = '<div class="spinner"></div> Checking Eligibility...';
       btn.disabled = true;
 
-      // Store pre-filled data
-      localStorage.setItem('pf_income', income);
-      localStorage.setItem('pf_employment', employment);
-      localStorage.setItem('pf_purpose', purpose);
-      localStorage.setItem('pf_amount', amount);
+      // Processing... (Data persistence removed as per request)
 
       setTimeout(() => {
         document.getElementById('eligibility-form').classList.add('hidden');
